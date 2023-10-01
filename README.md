@@ -1,4 +1,17 @@
 # nlp_with_transformers_visualizations
 
-link: 
-<iframe width="402" height="346" frameborder="0" scrolling="no" src="https://um6p-my.sharepoint.com/personal/abderrazzak_bajjou_um6p_ma/_layouts/15/Doc.aspx?sourcedoc={1fb81423-1265-467e-8fa1-c92c3500a3f0}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>
+link to posts:
+
+| Chapter  | Links                                               |
+|----------|----------------------------------------------------|
+| Chapter 1 | [Link 1](https://shorturl.at/bgqEQ)              |
+|          | [Link 2](https://shorturl.at/imBEZ)              |
+|          | [Link 3](https://shorturl.at/qruBX)              |
+|          | [Link 4](https://shorturl.at/jnx09)              |
+|          | [Link 5](https://shorturl.at/itJRX)              |
+| Chapter 2 | [Link 1](https://rb.gy/0jif5)                    |
+|          | [Link 2](https://rb.gy/4sqrj)                    |
+|          | [Link 3](https://rb.gy/rvhhz)                    |
+| Chapter 3 | [Link 1](https://rb.gy/5ctkh)                    |
+|          | [Link 2](https://rb.gy/onjmy)                    |
+| Chapter 4 | [Link 1](https://t.ly/3UfqS)                    |
