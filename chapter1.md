@@ -36,7 +36,7 @@ To grasp the significance of the Attention mechanism, consider the following exa
 ![Figure 2](visuals/attention_sentence.png)
 
 
-The following figure explains the processe of applying the attention mechanisme on a RNN.
+### The following figure explains the processe of applying the attention mechanisme on a RNN.
 
 ![Figure 2](visuals/attention_mechanisme_inRNN.png)
 
@@ -47,7 +47,7 @@ This architecture trains much faster than recurrent models and improve the perfo
 
 The following example illustrates the functionality of this mechanism:
 
-![Figure 4 :](<Screenshot from 2023-09-16 16-33-30.png>)
+![Figure 4 :](<visuals/Screenshot from 2023-09-16 16-33-30.png>)
 
 ## Transfer Learning in NLP
 
@@ -77,8 +77,133 @@ The following exemple explain the process of building a twitter sentiment cassif
 
 
 In 2018, a monumental breakthrough occurred with the introduction of two transformer architectures: GPT and BERT. GPT only uses the decoder part of the Transformer architecture and the language modeling approach as ULMFiT. In contrast,BERT uses the encoder part of the Transformer architecture and a form of language modeling called masked language modeling 🎭.(Masked language modeling requires the model to fill in randomly missing words in a text.)
-
  
 
 The collective impact of GPT and BERT was groundbreaking. They set a new gold standard across a diverse array of NLP benchmarks, marking the inauguration of a transformative chapter in the history of transformers. 🌟
+
+## A Tour of Transformer Applications
+After understanding the archetecture of Transformers,lest's check what they are capable of ❗️
+
+Using Hugging Face 🤗, an open-source library, we can perform complex NLP tasks using state-of-the-art models.Hugging Face Transformers has a layered API that allows users to interact with the library at various levels of abstraction.
+
+💻 For this example, we will generate a text, then perform sentiment analysis, named entity recognition, question answering, and finally translate it into German with an average of 3 lines of code for each task.
+
+Installing the requirements  :
+```
+!pip install transformers
+!pip install sentencepiece
+```
+
+```python
+from transformers import pipeline
+import pandas as pd
+```
+
+### Text generation 
+ We will start our tour with generating the rest of the test **"Thanks to  AI, we can promote the development of the African region, and"** using the test-generation supported task by pipline.
+
+
+
+  
+```python
+#initiate the generatore
+generator = pipeline("text-generation")
+
+#what's your text
+text = "Thanks to  AI, we can promote the development of the African region, and"
+
+#completing the paragraphe
+outputs = generator(text, max_length=30, num_return_sequences=1)
+
+generated_text = outputs[0]['generated_text']
+#printing the result
+print(generated_text)
+```
+**The output** :
+Thanks to  AI, we can promote the development of the African region, and it may lead to faster productivity growth through better local governance.
+
+### Sentement Analysis :
+
+Then we will apply sentement anlysis on the generated text, using pipline.
+
+  
+```python
+#initiate the sentement analysis pipline
+classifier = pipeline("sentiment-analysis")
+
+#get prediction
+outputs = classifier(generated_text)
+
+#printing the result
+print(pd.DataFrame(outputs))
+```
+**The output**:
+
+|    label   |   score   |
+|:----------:|:---------:|
+|  POSITIVE  | 0.998763  |
+
+### Named-Entety recognition :
+
+Next step is applying named entity recognition (NER). using pipline .
+
+```python
+#initiate the NER Tagger
+ner_tagger = pipeline("ner", aggregation_strategy="simple")
+
+#Detecte intities
+outputs = ner_tagger(generated_text)
+
+#printing the result
+print(pd.DataFrame(outputs))
+```
+
+**The output :**
+| entity_group |   score   |   word   | start |  end  |
+|:------------:|:---------:|:-------:|:-----:|:----:|
+|     ORG      | 0.977671  |   AI    |  11   |  13  |
+|    MISC      | 0.999172  | African |  53   |  60  |
+|    MISC      | 0.999294  | African | 105   | 112  |
+
+
+### Question Answering :
+what about answering some quetions based in the informations in our generated text.
+
+```python
+#intitiate the QA pipline
+reader = pipeline("question-answering")
+
+#Our quetion
+question = "How can we promote the development of the African region?"
+#extract the answer from the generated text
+outputs = reader(question=question, context=generated_text)
+#printing the result
+print(pd.DataFrame([outputs]))
+```
+
+**The output :**
+
+|   score  | start |  end  | answer |
+|:-------: |:-----:|:----: |:------:|
+|  0.5826  |   11  |  13   |   AI   |
+
+
+### Translation :
+Finally we will translate the generated text into German .
+
+```python
+#initiate the translatore from "English" to "German"
+translator = pipeline("translation_en_to_de", model="Helsinki-NLP/opus-mt-en-de")
+
+#translate the generated text
+outputs = translator(generated_text, clean_up_tokenization_spaces=True, min_length=100)
+translated_text = outputs[0]['translation_text']
+
+#printing the output
+print(translated_text)
+
+```
+
+**The output :**
+Dank KI können wir die Entwicklung der afrikanischen Region fördern, und es kann zu einem schnelleren Produktivitätswachstum durch eine bessere lokale Governance führen. Ab von KI können wir die Entwicklung der afrikanischen Region fördern, und es kann zu einem schnelleren Produktivitätswachstum durch eine bessere lokale Governance führen
 
