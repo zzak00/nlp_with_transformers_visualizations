@@ -13,14 +13,18 @@ Comprising two core components:
 - **The Encoder** : It processes the input sentence word-by-word using recurrent models (RNN/LSTM/GRU), produces a representation of the entire sentence in a hidden space.
 - **The Decoder** : retrieves this hidden state (representation) and generates an output.
 
-However, a notable weakness of this architecture lies in the final hidden state of the encoder, which imposes an information bottleneck. This state must encapsulate the meaning of the entire input sequence since it serves as the sole source of information for the decoder during output generation. This limitation becomes particularly pronounced when dealing with longer input sequences.
-
-The following slide provide an overview of the inner workings of the architecture!
+The following slides provide an overview of the inner workings of the architecture 🎯!
    ![Figure 1](visuals/1665309050800.jpeg)
+   ![Figure 1](visuals/1665309051909.jpeg)
+
 
 1. **Word Embedding**: Each word is represented by a dense, low-dimensional vector.
 2. **The Encoder**: It processes the input sentence sequentially using the RNN cells and produces the final hidden state, which is the sentence representation.
 3. **The Decoder**: At each step, using the hidden state and the embedding of the previous token, it generates the next most probable token.
+
+However,😕 a notable weakness of this architecture lies in the final hidden state of the encoder, which imposes an information bottleneck. This state must encapsulate the meaning of the entire input sequence since it serves as the sole source of information for the decoder during output generation. This limitation becomes particularly pronounced when dealing with longer input sequences.
+
+
 
 
 
