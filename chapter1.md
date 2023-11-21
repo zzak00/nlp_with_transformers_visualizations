@@ -13,16 +13,17 @@ Comprising two core components:
 - **The Encoder** : It processes the input sentence word-by-word using recurrent models (RNN/LSTM/GRU), produces a representation of the entire sentence in a hidden space.
 - **The Decoder** : retrieves this hidden state (representation) and generates an output.
 
-The following slides provide an overview of the inner workings of the architecture 🎯!
-   ![Figure 1](visuals/1665309050800.jpeg)
+The following slides provide an overview of the inner workings of the architecture of a translation task  🎯!
    ![Figure 1](visuals/1665309051909.jpeg)
+   ![Figure 1](visuals/1665309050800.jpeg)
+
 
 
 1. **Word Embedding**: Each word is represented by a dense, low-dimensional vector.
 2. **The Encoder**: It processes the input sentence sequentially using the RNN cells and produces the final hidden state, which is the sentence representation.
 3. **The Decoder**: At each step, using the hidden state and the embedding of the previous token, it generates the next most probable token.
 
-However,😕 a notable weakness of this architecture lies in the final hidden state of the encoder, which imposes an information bottleneck. This state must encapsulate the meaning of the entire input sequence since it serves as the sole source of information for the decoder during output generation. This limitation becomes particularly pronounced when dealing with longer input sequences.
+However,😕 a notable weakness of this architecture lies in the final hidden state of the encoder, which imposes an ***information bottleneck***. This state must encapsulate the meaning of the entire input sequence since it serves as the sole source of information for the decoder during output generation. This limitation becomes particularly pronounced when dealing with longer input sequences.
 
 
 
@@ -42,9 +43,9 @@ To grasp the significance of the Attention mechanism, consider the following exa
 
 ### The following figure explains the processe of applying the attention mechanisme on a RNN.
 
-![Figure 2](visuals/attention_mechanisme_inRNN.png)
+![Figure 3](visuals/attention_mechanisme_inRNN.png)
 
-But Although adding the attention mechanism to RNNs has improved performance and produced much better translations,😕 training RNNs on large datasets is time-consuming as they are not parallelizable (Curse of recurrence!!).
+But Although adding the attention mechanism to RNNs has improved performance and produced much better translations,😕 training RNNs on large datasets is time-consuming as they are not parallelizable ( ***Curse of recurrence!!*** ).
 
 And this is where the **the Transformeres** shine with the introduction of the **self attention**, a mechanism that opetates on all states in the same layer of a neural network.The outputs of the self-attention mechanisms serve as input to feed-forward networks.
 This architecture trains much faster than recurrent models and improve the performance.
@@ -77,7 +78,7 @@ The ULMFiT framework comprises three fundamental steps:
 
 The following exemple explain the process of building a twitter sentiment cassifier using transfer learning.
 
-![Figure 6 :](<visuals/Screenshot 2023-10-31 at 10-19-37 1667131605803.png>)
+![Figure 7 :](<visuals/Screenshot 2023-10-31 at 10-19-37 1667131605803.png>)
 
 
 In 2018, a monumental breakthrough occurred with the introduction of two transformer architectures: GPT and BERT. GPT only uses the decoder part of the Transformer architecture and the language modeling approach as ULMFiT. In contrast,BERT uses the encoder part of the Transformer architecture and a form of language modeling called masked language modeling 🎭.(Masked language modeling requires the model to fill in randomly missing words in a text.)
@@ -86,7 +87,7 @@ In 2018, a monumental breakthrough occurred with the introduction of two transfo
 The collective impact of GPT and BERT was groundbreaking. They set a new gold standard across a diverse array of NLP benchmarks, marking the inauguration of a transformative chapter in the history of transformers. 🌟
 
 ## A Tour of Transformer Applications
-After understanding the archetecture of Transformers,lest's check what they are capable of ❗️
+After understanding  the architecture of Transformers,let's check what they are capable of 🚀❗️
 
 Using Hugging Face 🤗, an open-source library, we can perform complex NLP tasks using state-of-the-art models.Hugging Face Transformers has a layered API that allows users to interact with the library at various levels of abstraction.
 
