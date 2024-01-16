@@ -1,4 +1,4 @@
-# NLP with transformwrs chapter 1 :
+# NLP with Transformers Chapter 1 :
 
 Language is at the core of human communication, and for centuries, we've endeavored to unravel how it is intricately woven into our cognitive processes. Today, we are on a quest to advance further by introducing computers to the realm of human language through **Natural Language Processing (NLP)**. NLP is an artificial intelligence branch dedicated to harnessing machine learning techniques for a wide range of language-related tasks.
 
@@ -10,7 +10,7 @@ The concept of an encoder-decoder, also known as a **sequence-to-sequence archit
 
 Comprising two core components:
 
-- **The Encoder** : It processes the input sentence word-by-word using recurrent models (RNN/LSTM/GRU), produces a representation of the entire sentence in a hidden space.
+- **The Encoder** : It processes the input sentence word-by-word using recurrent models (RNN/LSTM/GRU), and produces a representation of the entire sentence in a hidden space.
 - **The Decoder** : retrieves this hidden state (representation) and generates an output.
 
 The following slides provide an overview of the inner workings of the architecture of a translation task  🎯!
@@ -32,7 +32,7 @@ However,😕 a notable weakness of this architecture lies in the final hidden st
 
 ## The Attention Mechanism
 
-The core concept behind the **Attention mechanism** is the assignment of weights to data, specifically to tokens (words in our context). Instead of producing a single hidden state for the entire input sequence, the encoder generates a hidden state at each step. This allows the decoder to access these individual states and make decisions regarding which portions of the input are most important and relevent at each step of the output generation.🎯 Through this mechanism, the model becomes capable of learning non trivial alignments between words in the generated translation and those present in the source sentence.
+The core concept behind the **Attention mechanism** is the assignment of weights to data, specifically to tokens (words in our context). Instead of producing a single hidden state for the entire input sequence, the encoder generates a hidden state at each step. This allows the decoder to access these individual states and make decisions regarding which portions of the input are most important and relevant at each step of the output generation.🎯 Through this mechanism, the model becomes capable of learning non-trivial alignments between words in the generated translation and those present in the source sentence.
 
 ### An Illustrative Example
 
@@ -41,14 +41,14 @@ To grasp the significance of the Attention mechanism, consider the following exa
 ![Figure 2](visuals/attention_sentence.png)
 
 
-### The following figure explains the processe of applying the attention mechanisme on a RNN.
+### The following figure explains the process of applying the attention mechanism on an RNN.
 
 ![Figure 3](visuals/attention_mechanisme_inRNN.png)
 
 But Although adding the attention mechanism to RNNs has improved performance and produced much better translations,😕 training RNNs on large datasets is time-consuming as they are not parallelizable ( ***Curse of recurrence!!*** ).
 
-And this is where the **the Transformeres** shine with the introduction of the **self attention**, a mechanism that opetates on all states in the same layer of a neural network.The outputs of the self-attention mechanisms serve as input to feed-forward networks.
-This architecture trains much faster than recurrent models and improve the performance.
+This is where **Transformers** shines with the introduction of **self-attention**, a mechanism that operates on all states in the same layer of a neural network. The outputs of the self-attention mechanisms serve as input to feed-forward networks.
+This architecture trains much faster than recurrent models and improves performance.
 
 The following example illustrates the functionality of this mechanism:
 
@@ -60,8 +60,8 @@ If you are familiar with computer vision, you have probably heard of a concept c
 
 ![Figure 5 :](<visuals/translearning1.png>)
 
-🎯 Transfer learning is the process of applying an existing trained model to a new, but related task. Architecturally, this involves dividing the model into a body and a head,The head is the task-specific portion of the network, while
-The body contains broad features from the source domain learned during training.During learning, the body weights learn general features, for images it learns basic features such as lines, edges, and colors... then these weights are used to initialize a new model for the new task.
+🎯 Transfer learning is the process of applying an existing trained model to a new, but related task. Architecturally, this involves dividing the model into a body and a head, The head is the task-specific portion of the network, while
+The body contains broad features from the source domain learned during training. During learning, the body weights learn general features, for images it learns basic features such as lines, edges, and colors... then these weights are used to initialize a new model for the new task.
 
 ![Figure 6 :](<visuals/translearning_analogie.png>)
 
@@ -76,7 +76,7 @@ The ULMFiT framework comprises three fundamental steps:
 
 3. **Fine-Tuning**: The language model undergoes further refinement, incorporating a classification layer for the specific target task, such as text classification.
 
-The following exemple explain the process of building a twitter sentiment cassifier using transfer learning.
+The following example explains the process of building a Twitter sentiment classifier using transfer learning.
 
 ![Figure 7 :](<visuals/Screenshot 2023-10-31 at 10-19-37 1667131605803.png>)
 
@@ -87,9 +87,9 @@ In 2018, a monumental breakthrough occurred with the introduction of two transfo
 The collective impact of GPT and BERT was groundbreaking. They set a new gold standard across a diverse array of NLP benchmarks, marking the inauguration of a transformative chapter in the history of transformers. 🌟
 
 ## A Tour of Transformer Applications
-After understanding  the architecture of Transformers,let's check what they are capable of 🚀❗️
+After understanding  the architecture of Transformers, let's check what they are capable of 🚀❗️
 
-Using Hugging Face 🤗, an open-source library, we can perform complex NLP tasks using state-of-the-art models.Hugging Face Transformers has a layered API that allows users to interact with the library at various levels of abstraction.
+Using Hugging Face 🤗, an open-source library, we can perform complex NLP tasks using state-of-the-art models. Hugging Face Transformers has a layered API that allows users to interact with the library at various levels of abstraction.
 
 💻 For this example, we will generate a text, then perform sentiment analysis, named entity recognition, question answering, and finally translate it into German with an average of 3 lines of code for each task.
 
@@ -105,19 +105,19 @@ import pandas as pd
 ```
 
 ### Text generation 
- We will start our tour with generating the rest of the test **"Thanks to  AI, we can promote the development of the African region, and"** using the test-generation supported task by pipline.
+ We will start our tour by generating the rest of the test **"Thanks to  AI, we can promote the development of the African region, and"** using the test-generation supported task by pipeline.
 
 
 
   
 ```python
-#initiate the generatore
+#initiate the generator
 generator = pipeline("text-generation")
 
 #what's your text
 text = "Thanks to  AI, we can promote the development of the African region, and"
 
-#completing the paragraphe
+#completing the paragraph
 outputs = generator(text, max_length=30, num_return_sequences=1)
 
 generated_text = outputs[0]['generated_text']
@@ -127,13 +127,13 @@ print(generated_text)
 **The output** :
 Thanks to  AI, we can promote the development of the African region, and it may lead to faster productivity growth through better local governance.
 
-### Sentement Analysis :
+### Sentiment Analysis :
 
-Then we will apply sentement anlysis on the generated text, using pipline.
+Then we will apply sentiment analysis to the generated text, using pipeline.
 
   
 ```python
-#initiate the sentement analysis pipline
+#initiate the sentiment analysis pipeline
 classifier = pipeline("sentiment-analysis")
 
 #get prediction
@@ -148,22 +148,22 @@ print(pd.DataFrame(outputs))
 |:----------:|:---------:|
 |  POSITIVE  | 0.998763  |
 
-### Named-Entety recognition :
+### Named-Entity recognition :
 
-Next step is applying named entity recognition (NER). using pipline .
+Next step is applying named entity recognition (NER). using pipeline.
 
 ```python
 #initiate the NER Tagger
 ner_tagger = pipeline("ner", aggregation_strategy="simple")
 
-#Detecte intities
+#Detecte entities
 outputs = ner_tagger(generated_text)
 
 #printing the result
 print(pd.DataFrame(outputs))
 ```
 
-**The output :**
+**The output:**
 | entity_group |   score   |   word   | start |  end  |
 |:------------:|:---------:|:-------:|:-----:|:----:|
 |     ORG      | 0.977671  |   AI    |  11   |  13  |
@@ -172,13 +172,13 @@ print(pd.DataFrame(outputs))
 
 
 ### Question Answering :
-what about answering some quetions based in the informations in our generated text.
+what about answering some questions based on the information in our generated text?
 
 ```python
-#intitiate the QA pipline
+#intitiate the QA pipeline
 reader = pipeline("question-answering")
 
-#Our quetion
+#Our question
 question = "How can we promote the development of the African region?"
 #extract the answer from the generated text
 outputs = reader(question=question, context=generated_text)
@@ -186,7 +186,7 @@ outputs = reader(question=question, context=generated_text)
 print(pd.DataFrame([outputs]))
 ```
 
-**The output :**
+**The output:**
 
 |   score  | start |  end  | answer |
 |:-------: |:-----:|:----: |:------:|
@@ -194,10 +194,10 @@ print(pd.DataFrame([outputs]))
 
 
 ### Translation :
-Finally we will translate the generated text into German .
+Finally, we will translate the generated text into German.
 
 ```python
-#initiate the translatore from "English" to "German"
+#initiate the translator from "English" to "German"
 translator = pipeline("translation_en_to_de", model="Helsinki-NLP/opus-mt-en-de")
 
 #translate the generated text
@@ -209,6 +209,6 @@ print(translated_text)
 
 ```
 
-**The output :**
+**The output:**
 Dank KI können wir die Entwicklung der afrikanischen Region fördern, und es kann zu einem schnelleren Produktivitätswachstum durch eine bessere lokale Governance führen. Ab von KI können wir die Entwicklung der afrikanischen Region fördern, und es kann zu einem schnelleren Produktivitätswachstum durch eine bessere lokale Governance führen
 
