@@ -14,8 +14,8 @@ Comprising two core components:
 - **The Decoder** : retrieves this hidden state (representation) and generates an output.
 
 The following slides provide an overview of the inner workings of the architecture of a translation task  🎯!
-   ![Figure 1](visuals/1665309051909.jpeg)
-   ![Figure 1](visuals/1665309050800.jpeg)
+   ![Figure 1](visuals/encoder_decoder1.jpeg)
+   ![Figure 1](visuals/encoder_decoder2.jpeg)
 
 
 
@@ -52,7 +52,7 @@ This architecture trains much faster than recurrent models and improves performa
 
 The following example illustrates the functionality of this mechanism:
 
-![Figure 4 :](<visuals/Screenshot from 2023-09-16 16-33-30.png>)
+![Figure 4 :](<visuals/The_attention_mechanism.png>)
 
 ## Transfer Learning in NLP
 
@@ -78,7 +78,7 @@ The ULMFiT framework comprises three fundamental steps:
 
 The following example explains the process of building a Twitter sentiment classifier using transfer learning.
 
-![Figure 7 :](<visuals/Screenshot 2023-10-31 at 10-19-37 1667131605803.png>)
+![Figure 7 :](<visuals/Transfer_learning_in_NLP.png>)
 
 
 In 2018, a monumental breakthrough occurred with the introduction of two transformer architectures: GPT and BERT. GPT only uses the decoder part of the Transformer architecture and the language modeling approach as ULMFiT. In contrast,BERT uses the encoder part of the Transformer architecture and a form of language modeling called masked language modeling 🎭.(Masked language modeling requires the model to fill in randomly missing words in a text.)
