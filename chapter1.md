@@ -14,8 +14,8 @@ Comprising two core components:
 - **The Decoder** : retrieves this hidden state (representation) and generates an output.
 
 The following slides provide an overview of the inner workings of the architecture of a translation task  🎯!
-   ![Figure 1](visuals/encoder_decoder1.jpeg)
-   ![Figure 1](visuals/encoder_decoder2.jpeg)
+   ![Figure 1](visuals/chap1visuals/encoder_decoder1.jpeg)
+   ![Figure 1](visuals/chap1visuals/encoder_decoder2.jpeg)
 
 
 
@@ -38,12 +38,12 @@ The core concept behind the **Attention mechanism** is the assignment of weights
 
 To grasp the significance of the Attention mechanism, consider the following example. The figure below demonstrates the alignment of the words "zone" and "Area" using an attention-based decoder, even when these words are ordered differently in the source sentence and the translation.
 
-![Figure 2](visuals/attention_sentence.png)
+![Figure 2](visuals/chap1visuals//attention_sentence.png)
 
 
 ### The following figure explains the process of applying the attention mechanism on an RNN.
 
-![Figure 3](visuals/attention_mechanisme_inRNN.png)
+![Figure 3](visuals/chap1visuals//attention_mechanisme_inRNN.png)
 
 But Although adding the attention mechanism to RNNs has improved performance and produced much better translations,😕 training RNNs on large datasets is time-consuming as they are not parallelizable ( ***Curse of recurrence!!*** ).
 
@@ -52,18 +52,18 @@ This architecture trains much faster than recurrent models and improves performa
 
 The following example illustrates the functionality of this mechanism:
 
-![Figure 4 :](<visuals/The_attention_mechanism.png>)
+![Figure 4 :](<visuals/chap1visuals//The_attention_mechanism.png>)
 
 ## Transfer Learning in NLP
 
 If you are familiar with computer vision, you have probably heard of a concept called Transfer Learning, unless you are training your CNN architectures from scratch, in which case you should consult a therapist👨‍⚕️ !
 
-![Figure 5 :](<visuals/translearning1.png>)
+![Figure 5 :](<visuals/chap1visuals//translearning1.png>)
 
 🎯 Transfer learning is the process of applying an existing trained model to a new, but related task. Architecturally, this involves dividing the model into a body and a head, The head is the task-specific portion of the network, while
 The body contains broad features from the source domain learned during training. During learning, the body weights learn general features, for images it learns basic features such as lines, edges, and colors... then these weights are used to initialize a new model for the new task.
 
-![Figure 6 :](<visuals/translearning_analogie.png>)
+![Figure 6 :](<visuals/chap1visuals/translearning_analogie.png>)
 
 
 While achieving great success in computer vision, the pre-training process for Natural Language Processing (NLP) was far from straightforward 😕. However, a significant breakthrough came with the introduction of ULMFiT, which provided the pivotal missing piece to ignite the transformer revolution.
@@ -78,7 +78,7 @@ The ULMFiT framework comprises three fundamental steps:
 
 The following example explains the process of building a Twitter sentiment classifier using transfer learning.
 
-![Figure 7 :](<visuals/Transfer_learning_in_NLP.png>)
+![Figure 7 :](<visuals/chap1visuals/Transfer_learning_in_NLP.png>)
 
 
 In 2018, a monumental breakthrough occurred with the introduction of two transformer architectures: GPT and BERT. GPT only uses the decoder part of the Transformer architecture and the language modeling approach as ULMFiT. In contrast,BERT uses the encoder part of the Transformer architecture and a form of language modeling called masked language modeling 🎭.(Masked language modeling requires the model to fill in randomly missing words in a text.)
