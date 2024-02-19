@@ -156,4 +156,82 @@ assume the text has been tokenized and encoded as numerical vectors. Tokenizatio
 the step of breaking down a string into the atomic units used in the model.The three main tokenization strategies are character tokenization, word tokenization, and subword tokenization.
 
 ### Character Tokenization :
-The simplest tokenization scheme is to feed each character individually to the model. So to tokenize the followin exemple **"Tokenizing text is a core task of NLP."** we can just
+The simplest tokenization scheme is to feed each character individually to the model. So to tokenize the following example **"Tokenizing text is a core task of NLP."**, we can just list the text and we will obtain: **['T', 'o', 'k', 'e', 'n', 'i', 'z', 'i', 'n', 'g', ' ', 't', 'e', 'x', 't', ' ', 'i', 's', ' ', 'a', ' ', 'c', 'o', 'r', 'e', ' ', 't', 'a', 's', 'k', ' ', 'o', 'f', ' ', 'N', 'L', 'P', '.']**. This will allow us to create a dictionary to map each character with a unique integer:
+
+```python
+{' ': 0, '.': 1, 'L': 2, 'N': 3, 'P': 4, 'T': 5, 'a': 6, 'c': 7, 'e': 8, 'f': 9, 'g': 10, 'i': 11, 'k': 12, 'n': 13, 'o': 14, 'r': 15, 's': 16, 't': 17, 'x': 18, 'z': 19}
+```
+We can now transform our initial text to a list of entegers : **[5, 14, 12, 8, 13, 11, 19, 11, 13, 10, 0, 17, 8, 18, 17, 0, 11, 16, 0, 6, 0, 7,
+14, 15, 8, 0, 17, 6, 16, 12, 0, 14, 9, 0, 3, 2, 4, 1]**.
+The final step will be converting numerical vector to a 2D tensor of **One-hot vectors**.
+#### Side note :
+In machine learning, one hot encoding is used when you need to represent categorical data where each category is represented by a unique binary value (0 or 1). For example, if we have three categories: "red," "green," and "blue," a one hot vector encoding would represent these categories as follows:
+
+- "red" would be represented as `[1, 0, 0]`
+- "green" would be represented as `[0, 1, 0]`
+- "blue" would be represented as `[0, 0, 1]`
+
+This encoding scheme ensures that each category is distinctly represented by a binary vector, making it suitable for input to machine learning algorithms that require numerical input data.
+
+For our case, we will encode each character with a one-hot vector of size equal to the number of unique characters in the sequence. Each vector will have zeros everywhere except for its corresponding index in the sorted array of unique characters.
+
+Character tokenization results in a smaller vocabulary and much fewer out-of-vocabulary tokens.but it results in a much higher number of tokens for a given input sequence and it's not meanighuf and needs to learn linguistic structures from the data with make the training more expensive. That's why most project do not use it.
+
+###  Word Tokenization :
+Rather than breaking the text into individual characters, we can segment it into words and assign each word an integer. This method reduces the model's workload since it doesn't have to learn complex linguistic structures. The simplest word tokenizers split text based on spaces.
+```python
+tokenized_text = text.split()
+print(tokenized_text)
+
+# Output:
+# ['Tokenizing', 'text', 'is', 'a', 'core', 'task', 'of', 'NLP.']
+```
+From here, we can follow similar steps to what we did with the character tokenizer to assign IDs to each word. However, this approach can introduce several potential problems. For example, punctuation marks like periods can create ambiguous tokens like 'NLP.' Additionally, words may have different forms due to declensions, conjugations, or misspellings, leading to a large vocabulary size potentially reaching millions, requiring more model parameters.
+
+A common strategy to address this is limiting the vocabulary size by including only the 100,000 most frequent words in the corpus. Words not part of the vocabulary are considered unknown and mapped to a shared token. However, this approach risks losing valuable information related to rare words.
+
+### Subword Tokenization :
+The basic idea behind subword tokenization is to combine the best aspects of character and word tokenization. By splitting rare words into smaller units, we enable the model to handle complex vocabulary while maintaining manageable input lengths by treating frequent words as unique entities.
+
+```python
+
+from transformers import AutoTokenizer
+# Specifying the pre-trained model checkpoint to be used
+model_ckpt = "distilbert-base-uncased"
+# Initializing a tokenizer object by loading the pre-trained tokenizer associated with it.
+tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
+
+```
+Let's apply the tokenizer on our previous exemple : 
+
+```python
+# apllying the tokenozer to our exemple
+encoded_text = tokenizer(text)
+print(encoded_text['input_ids'])
+"""  Output :
+ [101, 19204, 6026, 3793, 2003, 1037, 4563, 4708, 1997, 17953, 2361, 1012, 102] """
+# converting the ids to the correspending tokens
+tokens = tokenizer.convert_ids_to_tokens(encoded_text.input_ids)
+print(tokens)
+""" Output :
+ ['[CLS]', 'token', '##izing', 'text', 'is', 'a', 'core', 'task', 'of', 'nl', '##p', '.', '[SEP]'] """
+# converint the tokens to the original text 
+print(tokenizer.convert_tokens_to_string(tokens))
+"""Output: 
+ [CLS] tokenizing text is a core task of nlp. [SEP] """
+```
+We can observe that the words have been mapped to unique integers. By converting the IDs back to tokens, we notice the emergence of some new tokens such as '[CLS]', indicating the start, and '[SEP]', indicating the end of a sequence. Additionally, the word 'tokenizing' has been split into two tokens: 'token' and '##izing' as well as NLP. 
+
+Finally we can tokenize the whole emotions dataset using the .map()
+methot :
+```python
+# Define a function named "tokenize" that takes a batch of data as input
+def tokenize(batch):
+    return tokenizer(batch["text"], padding=True, truncation=True)
+
+# Apply the "tokenize" function to the dataset "emotions" in batches
+emotions_encoded = emotions.map(tokenize, batched=True, batch_size=None)
+
+```
+## Training a Text Classifier :
+
