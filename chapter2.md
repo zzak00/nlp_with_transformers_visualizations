@@ -155,6 +155,8 @@ Transformer models like DistilBERT cannot receive raw strings as input; instead,
 assume the text has been tokenized and encoded as numerical vectors. Tokenization is
 the step of breaking down a string into the atomic units used in the model. The three main tokenization strategies are character tokenization, word tokenization, and subword tokenization.
 
+![Figure 1](visuals/chap2visuals/Tokenization.png)
+
 ### Character Tokenization :
 The simplest tokenization scheme is to feed each character individually to the model. So to tokenize the following example **"Tokenizing text is a core task of NLP."**, we can just list the text and we will obtain: **['T', 'o', 'k', 'e', 'n', 'i', 'z', 'i', 'n', 'g', ' ', 't', 'e', 'x', 't', ' ', 'i', 's', ' ', 'a', ' ', 'c', 'o', 'r', 'e', ' ', 't', 'a', 's', 'k', ' ', 'o', 'f', ' ', 'N', 'L', 'P', '.']**. This will allow us to create a dictionary to map each character with a unique integer:
 
@@ -234,4 +236,191 @@ emotions_encoded = emotions.map(tokenize, batched=True, batch_size=None)
 
 ```
 ## Training a Text Classifier :
+Pretrained models such as DistilBERT are initially trained to predict masked words within a sequence. To adapt them for text classification tasks, we integrate the pretrained model's core architecture with a custom classification head, effectively combining the model's pretrained body with a tailored classification component.
 
+We will explore two methodes to train a text classifier : 
+
+**Feature Extraction** : Use the hidden states as features and train the classifier on them without modifying the pretrained model.
+
+**Fine-tuning** : Train the whole model end-to-end, which also updates the parameters of the pretrained model.
+
+
+![Figure 1](visuals/chap2visuals/Training_text_classifier.png)
+
+### Transformers as feature extractures :
+
+Using a transformer as a feature extractor is fairly simple.We freeze the body’s weights during training and use the hidden states as features for the classifier.Since the hidden sates only need to be calculated once this is a convenient approach to quickly train a small model.Such a model could be a neural classification layer or a method that does not rely on gradients, such as a random forest.
+
+![Figure 1](visuals/chap2visuals/featureExtraction.png)
+
+**In the feature-based approach, the DistilBERT model is frozen and just pro‐
+vides features for a classifier**
+
+#### feature extraction : 
+The best way to understand this part is to see it in action, we will extract the hidden state of ***' this is a test '***. First we will tokenize it and pass the tokenized tensor as input to a pretrained model to extract the last hidden states of all the tokens :
+```python
+# Tokenizing the text : 
+text = "this is a test"
+inputs = tokenizer(text, return_tensors="pt") 
+
+# Loading the model :
+from transformers import AutoModel
+model_ckpt = "distilbert-base-uncased"
+# Definign the device as a GPU if available or else as CPU
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# Load pretrained DistilBert model without the last layer
+model = AutoModel.from_pretrained(model_ckpt).to(device)
+
+# Extraction the hidden states : 
+
+# Placing the encodings in the same device as the model
+inputs = {k:v.to(device) for k,v in inputs.items()}
+with torch.no_grad():
+    # Applying the model to all our tokens
+    outputs = model(**inputs)
+print(outputs)
+
+# Checking the size of our output 
+outputs.last_hidden_state.size()
+""" torch.Size([1, 6, 768]) """
+```
+Looking at the size of our output, '1' refers to the batch size, indicating that we are processing just one sentence in this example. '6' represents the number of tokens, and it is 6, not just 4, because our tokenizer adds special tokens. As you may recall from the last part, '[CLS]' indicates the start of a sequence, and '[SEP]' indicates the end of a sequence. Lastly, '768' represents the dimensionality of the hidden state vector.
+
+In classification tasks, it is a common practice to use the hidden state of the '[CLS]' token as a feature vector to classify the entire sentence. We can extract it as follows:
+```python
+outputs.last_hidden_state[:,0]
+```
+So now we will just apply the same process on all the sequences in the emotions dataset : 
+
+```python
+def extract_hidden_states(batch):
+    # Place model inputs on the GPU
+    inputs = {k:v.to(device) for k,v in batch.items()
+    if k in tokenizer.model_input_names}
+    # Extract last hidden states
+    with torch.no_grad():
+    last_hidden_state = model(**inputs).last_hidden_state
+    # Return vector for [CLS] token
+    return {"hidden_state": last_hidden_state[:,0].cpu().num()}
+# Converting the input_ids and attention_mask columns to the "torch" format
+emotions_encoded.set_format("torch",columns=["input_ids","attention_mask", "label"])
+# Extract the hidden states across all splits
+emotions_hidden = emotions_encoded.map(extract_hidden_states, batched=True)
+
+ ```
+
+#### Creating a feature matrix :
+
+Now the preprocessed dataset contains all the information we need to train a classifier on it. We will use the hidden states as input features and the labels as targets.
+
+```python
+import numpy as np
+X_train = np.array(emotions_hidden["train"]["hidden_state"])
+X_valid = np.array(emotions_hidden["validation"]["hidden_state"])
+y_train = np.array(emotions_hidden["train"]["label"])
+y_valid = np.array(emotions_hidden["validation"]["label"])
+```
+#### Training a simple classifier :
+Finally we can use our hidden states to train a simple Logisticregression model with Sickit-learn :
+
+```python
+from sklearn.linear_model import LogisticRegression
+# We increase `max_iter` to guarantee convergence
+lr_clf = LogisticRegression(max_iter=3000)
+lr_clf.fit(X_train, y_train)
+lr_clf.score(X_valid, y_valid)
+# The model's accuaracy : 0.633
+```
+
+The confusioin matrix associated to this classification model :
+
+![Figure 1](visuals/chap2visuals/confusionMatrix1.png)
+
+We notice that anger and fear are most often confused with sadness, while love and surprise are frequently mistaken for joy.
+
+## Fine tuning Transformeres :
+
+**Fine Tuning** in deep learning is a form of transfer learning. It involves taking a pre-trained model, which has been trained on a large dataset for a general task such as image recognition or natural language understanding, and making minor adjustments to its internal parameters. The goal is to optimize the model’s performance on a new, related task without starting the training process from scratch.
+
+For our context, With the fine-tuning approach we do not use the hidden states as fixed features, but instead train them as shown in next figure. This requires the classification head to be differentiable, which is why this method usually uses a neural network for classification.
+
+![Figure 1](visuals/chap2visuals/Fine-Tuning.png)
+**When using the fine-tuning approach the whole DistilBERT model is trained
+along with the classification head**
+
+Now let's start our fine-tuning. Fisrt we will load a pretrained model, but this one has a classification head on top of the pretrained model outputs, which can be easily trained with the base model. We just
+need to specify how many labels the model has to predict (six emotions for our case).
+
+```python
+# Importing the AutoModelForSequenceClassification
+from transformers import AutoModelForSequenceClassification
+
+# Defining the number of labels for the classification task
+num_labels = 6
+
+# Instantiating a model for sequence classification using the AutoModelForSequenceClassification class
+# Loading a pre-trained model checkpoint with the specified number of labels
+model = (AutoModelForSequenceClassification
+        .from_pretrained(model_ckpt, num_labels=num_labels)
+        .to(device))
+```
+
+Next, we will define our performance metrics. To do so we will define a compute_metrics() function for the Trainer, it will take a named tuple with predictions and label_ids (True labels) and returns a dictionary that maps each metric's name to its value. For our application, we’ll compute the **F1-score** and the **accuracy** of the model as follows:
+```python
+from sklearn.metrics import accuracy_score, f1_score
+
+def compute_metrics(pred):
+    labels = pred.label_ids #The True labels
+    preds = pred.predictions.argmax(-1) # The model's prediction
+
+    # Compute metrics
+    f1 = f1_score(labels, preds, average="weighted")
+    acc = accuracy_score(labels, preds)
+    return {"accuracy": acc, "f1": f1}
+```
+Next, we will define the training parameteres and finnaly we will train the model using the **Trainer** object from the transformers labrary :🎯
+
+```python
+batch_size = 64
+# Calculate logging steps based on training dataset size and batch size
+logging_steps = len(emotions_encoded["train"]) // batch_size
+# Define name for the fine-tuned model
+model_name = f"{model_ckpt}-finetuned-emotion"
+# Configure training arguments
+training_args = TrainingArguments(
+    output_dir=model_name,
+    num_train_epochs=2,
+    learning_rate=2e-5,
+    per_device_train_batch_size=batch_size,
+    per_device_eval_batch_size=batch_size,
+    weight_decay=0.01,
+    evaluation_strategy="epoch",
+    disable_tqdm=False,
+    logging_steps=logging_steps,
+    push_to_hub=True,
+    log_level="error"
+)
+
+# Initialize Trainer object for training the model
+trainer = Trainer(
+    model=model,  # Pre-trained model to be fine-tuned
+    args=training_args,  # Training arguments and configuration
+    compute_metrics=compute_metrics,  # Function for computing evaluation metrics
+    train_dataset=emotions_encoded["train"],  # Training dataset
+    eval_dataset=emotions_encoded["validation"],  # Evaluation dataset
+    tokenizer=tokenizer  # Tokenizer associated with the model
+)
+
+# Start the training process
+trainer.train()
+```
+We can take a detailed look at the training metrics by calculating and visualising the confusion matrix 
+
+![Figure 1](visuals/chap2visuals/confiusionMatrixForFineTuning.png)
+**The model shows promising performance nearing an ideal confusion matrix, yet it frequently confuses "love" with "joy" and "surprise" with "joy" or "fear"**
+
+We notice that the fine-tuned model outperforms the classical classification model, but as a trade-off, it comes with increased computational costs. 📈 It's important to find your own balance between performance and resource allocation. ⚖️
+
+## Conclusion :
+
+Congratulations! 🎉 By reaching this point, you should be equipped with the knowledge of training a text classifier using transformers as feature extractors as well as fine-tuning a transformer model. You're now familiar with the typical Hugging Face pipeline for training a Transformer model. However, this is just the technical aspect; the real challenge lies in applying this knowledge to solve real-life problems effectively. 🚀
