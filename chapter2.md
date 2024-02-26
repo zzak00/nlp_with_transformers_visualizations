@@ -193,7 +193,8 @@ From here, we can follow similar steps to what we did with the character tokeniz
 A common strategy to address this is limiting the vocabulary size by including only the 100,000 most frequent words in the corpus. Words not part of the vocabulary are considered unknown and mapped to a shared token. However, this approach risks losing valuable information related to rare words.
 
 ### Subword Tokenization :
-The basic idea behind subword tokenization is to combine the best aspects of character and word tokenization. By splitting rare words into smaller units, we enable the model to handle complex vocabulary while maintaining manageable input lengths by treating frequent words as unique entities.
+The basic idea behind subword tokenization is to combine the best aspects of character and word tokenization. By splitting rare words into smaller units, we enable the model to handle complex vocabulary while maintaining manageable input lengths by treating frequent words as unique entities. For more details check the last [vedio](https://www.youtube.com/watch?v=zduSFxRajkE) from **Andrej Karpathy** about the Tokenizer used in GPT.
+
 
 ```python
 
@@ -424,3 +425,6 @@ We notice that the fine-tuned model outperforms the classical classification mod
 ## Conclusion :
 
 Congratulations! 🎉 By reaching this point, you should be equipped with the knowledge of training a text classifier using transformers as feature extractors as well as fine-tuning a transformer model. You're now familiar with the typical Hugging Face pipeline for training a Transformer model. However, this is just the technical aspect; the real challenge lies in applying this knowledge to solve real-life problems effectively. 🚀
+
+### Additional recources : 
+[Notebook for sentiment analysis](https://colab.research.google.com/drive/1AVEa_j7h9_06WxzJN2niPAqzLWLFNHHy?usp=sharing) : The code used in this article with extra demonstration and details.
