@@ -28,11 +28,11 @@ Introduction: Overview of the pipeline
  -->
 
  # NLP with Transformers chapter 2: Text classification
- Text classification is one of the most common tasks in NLP; it can be used for a broad range of applications, such as tagging customer feedback into categories or routing support tickets according to their language. 🌐 Whenever your email goes to spam, or a social media platform rejects your post or deletes your comment because it's "morally inappropriate,🍉 🇵🇸" chances are very high that a text classifier is involved. 🕵️‍♂️ Another common type of text classification is sentiment analysis, which aims to identify the polarity of a given text. In this article, we will see a step-by-step guide for building our sentiment analysis model using the transformer architecture. 🚀
+ Text classification is one of the most common tasks in NLP; it can be used for various applications, such as tagging customer feedback into categories or routing support tickets according to their language. 🌐 Whenever your email goes to spam, or a social media platform rejects your post or deletes your comment because it's "morally inappropriate,🍉 🇵🇸" chances are very high that a text classifier is involved. 🕵️‍♂️ Another common type of text classification is sentiment analysis, which aims to identify the polarity of a given text. This article will provide a step-by-step guide for building our sentiment analysis model using the transformer architecture. 🚀
 
  ### About the pipeline :
 
-The goal is to build a system that automatically classifies emotions expressed in Twitter messages about a product. 🛠️ The model will take a single tweet as input and assign one of the possible labels, including anger, fear, joy, love, sadness, and surprise.
+The goal is to build a system that automatically classifies emotions in Twitter messages about a product. 🛠️ The model will take a single tweet as input and assign one of the possible labels, including anger, fear, joy, love, sadness, and surprise.
 
 we’ll tackle this task using a variant of BERT called ***DistilBERT***. The main advantage of this model is that it achieves comparable performance to BERT while being significantly smaller and more efficient. We will follow the typical pipeline for training transformer models in the **hugging face**  ecosystem.🤗
 
@@ -59,8 +59,8 @@ To build our emotion detector we’ll use a great dataset from an article that e
 ```python
 from datasets import load_dataset
 
-"""NOTE: The hagging face dataset has more than 1700 datasets 
- You can load any theme by passing their name to the load_dataset function """
+""" NOTE: The hagging face dataset has more than 1700 datasets 
+ You can load any theme by passing its name to the load_dataset function """
  
 
 emotions = load_dataset("emotion")
@@ -136,7 +136,7 @@ Transformer models have a maximum input sequence length that is referred to as t
 maximum context size. For DistilBERT the maximum context size is 512 tokens, which amounts to a few paragraphs of text.
 
 ```python
-#Ploting the lenth of world for every label :
+#Ploting the length of word for every label :
 df["Words Per Tweet"] = df["text"].str.split().apply(len)
 df.boxplot("Words Per Tweet",by="label_name",
     grid=False,
@@ -193,7 +193,7 @@ From here, we can follow similar steps to what we did with the character tokeniz
 A common strategy to address this is limiting the vocabulary size by including only the 100,000 most frequent words in the corpus. Words not part of the vocabulary are considered unknown and mapped to a shared token. However, this approach risks losing valuable information related to rare words.
 
 ### Subword Tokenization :
-The basic idea behind subword tokenization is to combine the best aspects of character and word tokenization. By splitting rare words into smaller units, we enable the model to handle complex vocabulary while maintaining manageable input lengths by treating frequent words as unique entities. For more details check the last [vedio](https://www.youtube.com/watch?v=zduSFxRajkE) from **Andrej Karpathy** about the Tokenizer used in GPT.
+The basic idea behind subword tokenization is to combine the best aspects of character and word tokenization. By splitting rare words into smaller units, we enable the model to handle complex vocabulary while maintaining manageable input lengths by treating frequent words as unique entities. For more details check the last [video](https://www.youtube.com/watch?v=zduSFxRajkE) from **Andrej Karpathy** about the Tokenizer used in GPT.
 
 
 ```python
@@ -205,7 +205,7 @@ model_ckpt = "distilbert-base-uncased"
 tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
 
 ```
-Let's apply the tokenizer on our previous exemple : 
+Let's apply the tokenizer to our previous example: 
 
 ```python
 # Apllying the tokenizer to our example
@@ -237,20 +237,20 @@ emotions_encoded = emotions.map(tokenize, batched=True, batch_size=None)
 
 ```
 ## Training a Text Classifier :
-Pretrained models such as DistilBERT are initially trained to predict masked words within a sequence. To adapt them for text classification tasks, we integrate the pretrained model's core architecture with a custom classification head, effectively combining the model's pretrained body with a tailored classification component.
+Pretrained models such as DistilBERT are initially trained to predict masked words within a sequence. To adapt them for text classification tasks, we integrate the pre-trained model's core architecture with a custom classification head, effectively combining the model's pre-trained body with a tailored classification component.
 
-We will explore two methodes to train a text classifier : 
+We will explore two methods to train a text classifier : 
 
-**Feature Extraction** : Use the hidden states as features and train the classifier on them without modifying the pretrained model.
+**Feature Extraction**: Use the hidden states as features and train the classifier on them without modifying the pre-trained model.
 
-**Fine-tuning** : Train the whole model end-to-end, which also updates the parameters of the pretrained model.
+**Fine-tuning**: Train the whole model end-to-end, which also updates the parameters of the pre-trained model.
 
 
 ![Figure 1](visuals/chap2visuals/Training_text_classifier.png)
 
-### Transformers as feature extractures :
+### Transformers as feature extractors :
 
-Using a transformer as a feature extractor is fairly simple.We freeze the body’s weights during training and use the hidden states as features for the classifier.Since the hidden sates only need to be calculated once this is a convenient approach to quickly train a small model.Such a model could be a neural classification layer or a method that does not rely on gradients, such as a random forest.
+Using a transformer as a feature extractor is fairly simple. We freeze the body’s weights during training and use the hidden states as features for the classifier. Since the hidden states only need to be calculated once this is a convenient approach to quickly train a small model. Such a model could be a neural classification layer or a method that does not rely on gradients, such as a random forest.
 
 ![Figure 1](visuals/chap2visuals/featureExtraction.png)
 
@@ -258,7 +258,7 @@ Using a transformer as a feature extractor is fairly simple.We freeze the body�
 vides features for a classifier**
 
 #### feature extraction : 
-The best way to understand this part is to see it in action, we will extract the hidden state of ***' this is a test '***. First we will tokenize it and pass the tokenized tensor as input to a pretrained model to extract the last hidden states of all the tokens :
+The best way to understand this part is to see it in action, we will extract the hidden state of ***' this is a test '***. First, we will tokenize it and pass the tokenized tensor as input to a pre-trained model to extract the last hidden states of all the tokens :
 ```python
 # Tokenizing the text : 
 text = "this is a test"
@@ -298,7 +298,7 @@ def extract_hidden_states(batch):
     # Place model inputs on the GPU
     inputs = {k:v.to(device) for k,v in batch.items()
     if k in tokenizer.model_input_names}
-    # Extract last hidden states
+    # Extract the last hidden states
     with torch.no_grad():
     last_hidden_state = model(**inputs).last_hidden_state
     # Return vector for [CLS] token
@@ -322,7 +322,7 @@ y_train = np.array(emotions_hidden["train"]["label"])
 y_valid = np.array(emotions_hidden["validation"]["label"])
 ```
 #### Training a simple classifier :
-Finally we can use our hidden states to train a simple Logisticregression model with Sickit-learn :
+Finally, we can use our hidden states to train a simple Logistic regression model with Sickit-learn :
 
 ```python
 from sklearn.linear_model import LogisticRegression
@@ -333,23 +333,23 @@ lr_clf.score(X_valid, y_valid)
 # The model's accuaracy : 0.633
 ```
 
-The confusioin matrix associated to this classification model :
+The confusion matrix associated with this classification model :
 
 ![Figure 1](visuals/chap2visuals/confusionMatrix1.png)
 
 We notice that anger and fear are most often confused with sadness, while love and surprise are frequently mistaken for joy.
 
-## Fine tuning Transformeres :
+## Fine-tuning Transformers :
 
 **Fine Tuning** in deep learning is a form of transfer learning. It involves taking a pre-trained model, which has been trained on a large dataset for a general task such as image recognition or natural language understanding, and making minor adjustments to its internal parameters. The goal is to optimize the model’s performance on a new, related task without starting the training process from scratch.
 
-For our context, With the fine-tuning approach we do not use the hidden states as fixed features, but instead train them as shown in next figure. This requires the classification head to be differentiable, which is why this method usually uses a neural network for classification.
+For our context, With the fine-tuning approach we do not use the hidden states as fixed features, but instead, train them as shown in the next figure. This requires the classification head to be differentiable, which is why this method usually uses a neural network for classification.
 
 ![Figure 1](visuals/chap2visuals/Fine-Tuning.png)
 **When using the fine-tuning approach the whole DistilBERT model is trained
 along with the classification head**
 
-Now let's start our fine-tuning. Fisrt we will load a pretrained model, but this one has a classification head on top of the pretrained model outputs, which can be easily trained with the base model. We just
+Now let's start our fine-tuning. First, we will load a pre-trained model, but this one has a classification head on top of the pre-trained model outputs, which can be easily trained with the base model. We just
 need to specify how many labels the model has to predict (six emotions for our case).
 
 ```python
@@ -379,7 +379,7 @@ def compute_metrics(pred):
     acc = accuracy_score(labels, preds)
     return {"accuracy": acc, "f1": f1}
 ```
-Next, we will define the training parameteres and finnaly we will train the model using the **Trainer** object from the transformers labrary :🎯
+Next, we will define the training parameters and finally we will train the model using the **Trainer** object from the transformers library :🎯
 
 ```python
 batch_size = 64
@@ -415,12 +415,12 @@ trainer = Trainer(
 # Start the training process
 trainer.train()
 ```
-We can take a detailed look at the training metrics by calculating and visualising the confusion matrix 
+We can take a detailed look at the training metrics by calculating and visualizing the confusion matrix 
 
 ![Figure 1](visuals/chap2visuals/confiusionMatrixForFineTuning.png)
 **The model shows promising performance nearing an ideal confusion matrix, yet it frequently confuses "love" with "joy" and "surprise" with "joy" or "fear"**
 
-We notice that the fine-tuned model outperforms the classical classification model, but as a trade-off, it comes with increased computational costs. 📈 It's important to find your own balance between performance and resource allocation. ⚖️
+We notice that the fine-tuned model outperforms the classical classification model, but as a trade-off, it comes with increased computational costs. 📈 It's important to find your balance between performance and resource allocation. ⚖️
 
 ## Conclusion :
 
