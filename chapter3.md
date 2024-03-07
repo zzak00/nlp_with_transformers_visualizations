@@ -73,6 +73,7 @@ softmax($\frac{1}{\sqrt{d_k}}*\begin{bmatrix}
 2 & 9 &2 &5\\ 
 \end{bmatrix}$)
 
+
 we got : 
 $$
 
