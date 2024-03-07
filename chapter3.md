@@ -38,7 +38,12 @@ There are four main steps to implement this mechanism :
    - ***Key :&nbsp;&nbsp;***  tells the attention mechanism which parts of the sequence are important for understanding the query.  
    - ***Value :&nbsp;&nbsp;*** holds the informations (features) associated with each token in the sequence.
   
-**2 )&nbsp;** Compute attention scores. To do so, we use the similarity function, which is simply the dot product of the embedding matrices. Query and Keys that are similar will have a large dot product, indicating a higher level of focus.  
+
+**2 )&nbsp;** Compute attention scores:  
+
+$$
+\text{Attention}(Q, K) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)
+$$
 
  **3 )&nbsp;** To prevent dealing with large numbers, we normalize the variance of the attention scores by dividing them by the square root of the dimension of the keys  $\sqrt{d_k}$ , and then we apply a softmax function to convert the column values into a probability distribution.   
 
@@ -110,3 +115,4 @@ $$
 **The Updated Apple Embedding :**&emsp; [Apple] = [8.5&emsp;14.5]
 
 We can clearly see how the embedding of the word 'Apple' becomes more technology like and less fruit like.
+
