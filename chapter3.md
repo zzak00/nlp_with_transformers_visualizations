@@ -67,17 +67,7 @@ Let's now calculate the attention matrix and focus only on the word **"apple" ,*
 
 
 $$
-
-\text{softmax}\left(\frac{1}{\sqrt{d_k}}*\begin{bmatrix}
-5 & 5 \\
-7 & 2\\
-11 & 9\\
-20 & 2 \\
-\end{bmatrix}*\begin{bmatrix}
-20 & 11 &7&5\\
-2 & 9 &2 &5\\ 
-\end{bmatrix}\right)
-
+\text{softmax}(\frac{1}{\sqrt{d_k}})
 $$
 
 
