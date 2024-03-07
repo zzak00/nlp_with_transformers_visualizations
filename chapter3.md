@@ -65,7 +65,9 @@ Let's consider the following sentence: 'I love Apple iPhone.' We will represent 
 Let's now calculate the attention matrix and focus only on the word **"apple" ,** which was initially associated more with fruites than technology.
 
 
+
 $$
+
 \text{softmax}\left(\frac{1}{\sqrt{d_k}}*\begin{bmatrix}
 5 & 5 \\
 7 & 2\\
@@ -75,6 +77,7 @@ $$
 20 & 11 &7&5\\
 2 & 9 &2 &5\\ 
 \end{bmatrix}\right)
+
 $$
 
 
