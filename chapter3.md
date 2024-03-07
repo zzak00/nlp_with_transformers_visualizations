@@ -31,3 +31,14 @@ To gain a clear understanding of how it truly works, let's begin with the most i
 As we saw earlier, each token is individually represented by a vector of either 768 or 512 dimensions. The main idea behind self-attention is to use the entire sequence to compute a weighted average matrix that describes the relationships between each embedding and the other embeddings within the same sentence. As a result, we end up with embeddings that capture context more effectively.  
 To do so, we use a technique called:
 #### the scaled dot product: 
+There are three main steps to implement this mechanism :   
+**1 )&nbsp;** Project each token into three vectors, called:
+   - ***Query :&nbsp;&nbsp;*** represents the token from which the attention mechanism is getting the infotmation, it's used to compare against all the key vectors.
+   - ***Key :&nbsp;&nbsp;***  tells the attention mechanism which parts of the sequence are important for understanding the query.  
+   - ***Value :&nbsp;&nbsp;*** holds the informations (features) associated with each token in the sequence.
+  
+**2 )&nbsp;** Compute attention scores:  
+$$
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)
+$$
+
