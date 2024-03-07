@@ -19,7 +19,7 @@ uses its output and the encoder's hidden state to iteratively generate the outpu
 Scary, isn't it🫣? Don't worry. We're here to make it simpler.
 
 ## The Encoder 
-The transformer's encoder composed of  many encoder layers. In each layer, a sequence of embeddings is passed through two main components:    
+The transformer's encoder composed of  many layers. In each layer, a sequence of embeddings is passed through two main components:    
 1) A multihead self attention layer
 2) A fully connected feed-forward layer that is applied to each input embedding  
 
@@ -46,7 +46,7 @@ There are four main steps to implement this mechanism :
 $$
 \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
 $$
-#### To make it clearer, let's provide a simple example:
+#### To make it clearer, let's provide a simple example: 
 Let's consider the following sentence: 'I love Apple iPhone.' We will represent it in a two-dimensional embedding, where the first dimension represents the fruitiness of the word, and the second represents the technology. 
 $$
 \begin{bmatrix}
@@ -109,4 +109,4 @@ $$
 $$
 **The Updated Apple Embedding :**&emsp; [Apple] = [8.5&emsp;14.5]
 
-We can clearly see how the embedding of the word 'Apple' becomes more technology-like and less fruit-like.
+We can clearly see how the embedding of the word 'Apple' becomes more technology like and less fruit like.
