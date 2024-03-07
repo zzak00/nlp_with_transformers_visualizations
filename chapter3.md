@@ -49,6 +49,7 @@ $$
 
 **4 )&nbsp;** Multiply the attention weights by the value vectors to obtain updated embeddings.
 $$
+
 \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
 $$
 #### To make it clearer, let's provide a simple example:
@@ -71,7 +72,6 @@ $$
 11 & 9\\
 20 & 2 \\
 \end{bmatrix}
-
 $$
 
 
@@ -103,7 +103,6 @@ Love & * & * & * & * \\
 Apple & 0 & 0 & 0.5 & 0.5 \\
 Phone & * & * & * & * \\
 \end{array}
-
 $$
 
 We can see that the word **'apple'** is more focused on the word **'phone'** compared to the other words. Finally, let's multiply our weighted matrix by the value matrix.
@@ -127,7 +126,6 @@ $$
 8.5 & 14.5\\
 * & * \\
 \end{bmatrix}
-
 $$
 
 **The Updated Apple Embedding :**&emsp; [Apple] = [8.5&emsp;14.5]
