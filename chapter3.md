@@ -38,6 +38,7 @@ There are three main steps to implement this mechanism :
    - ***Value :&nbsp;&nbsp;*** holds the informations (features) associated with each token in the sequence.
   
 **2 )&nbsp;** Compute attention scores:  
+
 $$
 \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)
 $$
