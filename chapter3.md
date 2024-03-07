@@ -51,9 +51,13 @@ $$
 $$
 \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
 $$
-#### To make it clearer, let's provide a simple example: 
+#### To make it clearer, let's provide a simple example:
+
 Let's consider the following sentence: 'I love Apple iPhone.' We will represent it in a two-dimensional embedding, where the first dimension represents the fruitiness of the word, and the second represents the technology. 
+
+
 $$
+
 \begin{bmatrix}
    I  \\
    Love \\
@@ -67,10 +71,16 @@ $$
 11 & 9\\
 20 & 2 \\
 \end{bmatrix}
+
 $$
+
+
 Let's now calculate the attention matrix and focus only on the word **"apple" ,** which was initially associated more with fruites than technology.
 
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;softmax($\frac{1}{\sqrt{d_k}}*\begin{bmatrix}
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+softmax($
+
+\frac{1}{\sqrt{d_k}}*\begin{bmatrix}
 5 & 5 \\
 7 & 2\\
 11 & 9\\
@@ -78,10 +88,13 @@ Let's now calculate the attention matrix and focus only on the word **"apple" ,*
 \end{bmatrix}*\begin{bmatrix}
 20 & 11 &7&5\\
 2 & 9 &2 &5\\ 
-\end{bmatrix}$)
+\end{bmatrix}$
+
+)
 
 we got : 
 $$
+
 \begin{array}{c|cccc}
 & I & Love & Apple & Phones \\
 \hline
@@ -90,10 +103,13 @@ Love & * & * & * & * \\
 Apple & 0 & 0 & 0.5 & 0.5 \\
 Phone & * & * & * & * \\
 \end{array}
+
 $$
+
 We can see that the word **'apple'** is more focused on the word **'phone'** compared to the other words. Finally, let's multiply our weighted matrix by the value matrix.
 
 $$
+
 \begin{bmatrix}
 * & * & * & * \\
 * & * & * & * \\
@@ -111,7 +127,9 @@ $$
 8.5 & 14.5\\
 * & * \\
 \end{bmatrix}
+
 $$
+
 **The Updated Apple Embedding :**&emsp; [Apple] = [8.5&emsp;14.5]
 
 We can clearly see how the embedding of the word 'Apple' becomes more technology like and less fruit like.
