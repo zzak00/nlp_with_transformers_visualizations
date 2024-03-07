@@ -40,6 +40,6 @@ There are three main steps to implement this mechanism :
 **2 )&nbsp;** Compute attention scores:  
 
 $$
-\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)
+\text{Attention}(Q, K) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)
 $$
 
