@@ -39,11 +39,7 @@ There are four main steps to implement this mechanism :
    - ***Value :&nbsp;&nbsp;*** holds the informations (features) associated with each token in the sequence.
   
 
-**2 )&nbsp;** Compute attention scores:  
-
-$$
-\text{Attention}(Q, K) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)
-$$
+**2 )&nbsp;** Compute attention scores. we use the similarity fonction, which is the dot product of the embeddings matrices. Query and Keys that are similar will have a large dot product,
 
  **3 )&nbsp;** To prevent dealing with large numbers, we normalize the variance of the attention scores by dividing them by the square root of the dimension of the keys  $\sqrt{d_k}$ , and then we apply a softmax function to convert the column values into a probability distribution.   
 
@@ -57,30 +53,17 @@ $$
 Let's consider the following sentence: 'I love Apple iPhone.' We will represent it in a two-dimensional embedding, where the first dimension represents the fruitiness of the word, and the second represents the technology. 
 
 
-$$
-
-\begin{bmatrix}
-   I  \\
-   Love \\
-   Apple\\
-   Phones\\
-\end{bmatrix}
-=
-\begin{bmatrix}
-5 & 5 \\
-7 & 2\\
-11 & 9\\
-20 & 2 \\
-\end{bmatrix}
-$$
+| | |
+|--------------|-------------|
+| **I** | [5&emsp;5] | 
+| **Love** | [7&emsp;2] |
+| **Apple** | [11&emsp;9] |
+| **Phones** | [2&emsp;20] |
 
 
 Let's now calculate the attention matrix and focus only on the word **"apple" ,** which was initially associated more with fruites than technology.
 
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-softmax($
-
-\frac{1}{\sqrt{d_k}}*\begin{bmatrix}
+softmax($\frac{1}{\sqrt{d_k}}*\begin{bmatrix}
 5 & 5 \\
 7 & 2\\
 11 & 9\\
@@ -88,9 +71,7 @@ softmax($
 \end{bmatrix}*\begin{bmatrix}
 20 & 11 &7&5\\
 2 & 9 &2 &5\\ 
-\end{bmatrix}$
-
-)
+\end{bmatrix}$)
 
 we got : 
 $$
