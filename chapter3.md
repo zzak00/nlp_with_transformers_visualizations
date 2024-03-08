@@ -54,7 +54,7 @@ $$
 Let's consider the following sentence: 'I love Apple iPhone.' We will represent it in a two-dimensional embedding, where the first dimension represents the fruitiness of the word, and the second represents the technology. 
 
 
-| | |
+|||
 |--------------|-------------|
 | **I** | [5&emsp;5] | 
 | **Love** | [7&emsp;2] |
@@ -64,19 +64,9 @@ Let's consider the following sentence: 'I love Apple iPhone.' We will represent 
 
 Let's now calculate the attention matrix and focus only on the word **"apple" ,** which was initially associated more with fruites than technology.
 
+![figure 2](visuals/chap3visuals/softmax.png)
 
 
-$$
-\text{softmax}\left(\frac{1}{\sqrt{d_k}}*\begin{bmatrix}
-5 & 5 \\
-7 & 2\\
-11 & 9\\
-20 & 2 \\
-\end{bmatrix}*\begin{bmatrix}
-20 & 11 &7&5\\
-2 & 9 &2 &5\\ 
-\end{bmatrix}\right)
-$$
 
 
 
@@ -119,4 +109,5 @@ $$
 **The Updated Apple Embedding :**&emsp; [Apple] = [8.5&emsp;14.5]
 
 We can clearly see how the embedding of the word 'Apple' becomes more technology like and less fruit like.
+
 
