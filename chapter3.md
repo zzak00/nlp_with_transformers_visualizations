@@ -44,9 +44,13 @@ There are four main steps to implement this mechanism :
  **3 )&nbsp;** To prevent dealing with large numbers, we normalize the variance of the attention scores by dividing them by the square root of the dimension of the keys  $\sqrt{d_k}$ , and then we apply a softmax function to convert the column values into a probability distribution.   
 
 **4 )&nbsp;** Multiply the attention weights by the value vectors to obtain updated embeddings.
+
+
 $$
 \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
 $$
+
+
 ![figure 3](visuals/chap3visuals/self-attention.png)
 #### To make it clearer, let's provide a simple example:
 
@@ -64,6 +68,7 @@ Let's consider the following sentence: 'I love Apple iPhone.' We will represent 
 Let's now calculate the attention matrix and focus only on the word **"apple" ,** which was initially associated more with fruites than technology.
 
 ![figure 2](visuals/chap3visuals/softmax.png)
+
 <!--
 $$
 \text{softmax}\left(\frac{1}{\sqrt{d_k}}\times\begin{bmatrix}
