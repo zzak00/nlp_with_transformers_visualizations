@@ -25,7 +25,7 @@ The transformer's encoder composed of  many layers. In each layer, a sequence of
 
 At the end of our encoder, we have output embeddings that maintain the same size as the inputs. They become more contextually aware. For exemple, if we refer to an "Apple phone",the word "Apple" will be updated to be more "campany like" and less " fruit like".
 
-![figure 2](visuals/chap3visuals/apple.png)
+![figure 2](visuals/chap3visuals/encoder.png)
 To gain a clear understanding of how it truly works, let's begin with the most important component: the self-attention layer.
 ### Self-attention
 As we saw earlier, each token is individually represented by a vector of either 768 or 512 dimensions. The main idea behind self-attention is to use the entire sequence to compute a weighted average matrix that describes the relationships between each embedding and the other embeddings within the same sentence. As a result, we end up with embeddings that capture context more effectively.  
@@ -44,11 +44,10 @@ There are four main steps to implement this mechanism :
  **3 )&nbsp;** To prevent dealing with large numbers, we normalize the variance of the attention scores by dividing them by the square root of the dimension of the keys  $\sqrt{d_k}$ , and then we apply a softmax function to convert the column values into a probability distribution.   
 
 **4 )&nbsp;** Multiply the attention weights by the value vectors to obtain updated embeddings.
-
 $$
 \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
 $$
-
+![figure 3](visuals/chap3visuals/self-attention.png)
 #### To make it clearer, let's provide a simple example:
 
 Let's consider the following sentence: 'I love Apple iPhone.' We will represent it in a two-dimensional embedding, where the first dimension represents the fruitiness of the word, and the second represents the technology. 
@@ -65,12 +64,28 @@ Let's consider the following sentence: 'I love Apple iPhone.' We will represent 
 Let's now calculate the attention matrix and focus only on the word **"apple" ,** which was initially associated more with fruites than technology.
 
 ![figure 2](visuals/chap3visuals/softmax.png)
-
-
+<!--
+$$
+\text{softmax}\left(\frac{1}{\sqrt{d_k}}\times\begin{bmatrix}
+5 & 5 \\
+7 & 2 \\
+11 & 9 \\
+2 & 20 \\
+\end{bmatrix}
+\times
+\begin{bmatrix}
+2 & 11 & 7 & 5 \\
+20 & 9 & 2 & 5 \\
+\end{bmatrix} \right)
+$$
+-->
 
 
 
 we got : 
+
+![figure 2](visuals/chap3visuals/attention.png)
+<!--
 $$
 
 \begin{array}{c|cccc}
@@ -82,9 +97,11 @@ Apple & 0 & 0 & 0.5 & 0.5 \\
 Phone & * & * & * & * \\
 \end{array}
 $$
-
+-->
 We can see that the word **'apple'** is more focused on the word **'phone'** compared to the other words. Finally, let's multiply our weighted matrix by the value matrix.
 
+![figure 2](visuals/chap3visuals/valueMatrix.png)
+<!--
 $$
 
 \begin{bmatrix}
@@ -92,7 +109,7 @@ $$
 * & * & * & * \\
 0 & 0 & 0.5 & 0.5 \\
 * & * & * & * \\
-\end{bmatrix}*
+\end{bmatrix}\times
 \begin{bmatrix}
 5 & 5 \\
 7 & 2\\
@@ -105,9 +122,9 @@ $$
 * & * \\
 \end{bmatrix}
 $$
-
+-->
 **The Updated Apple Embedding :**&emsp; [Apple] = [8.5&emsp;14.5]
 
 We can clearly see how the embedding of the word 'Apple' becomes more technology like and less fruit like.
 
-
+![figure 2](visuals/chap3visuals/apple.png)
