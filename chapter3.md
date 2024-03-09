@@ -44,12 +44,13 @@ There are four main steps to implement this mechanism :
  **3 )&nbsp;** To prevent dealing with large numbers, we normalize the variance of the attention scores by dividing them by the square root of the dimension of the keys  $\sqrt{d_k}$ , and then we apply a softmax function to convert the column values into a probability distribution.   
 
 **4 )&nbsp;** Multiply the attention weights by the value vectors to obtain updated embeddings.
-
-
+  
+    
 $$
 \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
 $$
-
+  
+  
 
 ![figure 3](visuals/chap3visuals/self-attention.png)
 #### To make it clearer, let's provide a simple example:
