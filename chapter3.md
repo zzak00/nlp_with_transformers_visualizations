@@ -48,7 +48,7 @@ To create these vectors, we use sine and cosine functions, as illustrated below,
 There are several reasons why this method is useful: first, the periodicity of the functions helps in capturing the word's position; additionally, the output of sine and cosine falls between [-1,1], which is normalized. It won’t grow to an unmanageable numbers during calculations; furthermore, no additional training is required, as a unique representation is generated for each position.    
 
 
-![Figure 3](visuals/chap3visuals/positional_embeddings.png)   
+![figure 3](visuals/chap3visuals/positional_embeddings.png) 
 
 Now that we've encountered these concepts, we are ready to dive into the most important building bolck .
 ### Self-attention
