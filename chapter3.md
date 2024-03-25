@@ -1,6 +1,6 @@
 
 # NLP with Transformers chapter 3: Transformer anatomy
-In this chapter, we will dive deeper into the Transformers architecture, exploring the main building blocks of a transformer model. We will first focus on constructing the attention mechanism and then integrate all the necessary components to make the encoder function. Additionally, we'll highlight the key distinctions between the encoder and decoder modules.
+In this chapter, we will dive deeper into the Transformers architecture, exploring the main building blocks of a transformer model. We will focus on constructing the attention mechanism and then integrate all the necessary components to make the encoder function. Additionally, we'll highlight the key distinctions between the encoder and decoder modules.
 
 Tighten your seatbelt, it's time to explore the wonders of NLP✨.
 
@@ -24,11 +24,7 @@ The transformer's encoder is composed of many layers. In each layer, a sequence 
 1) A multi-head self-attention layer
 2) A fully connected feed-forward layer that is applied to each input embedding  
 
-
-At the end of our encoder, we have output embeddings that maintain the same size as the inputs. They become more contextually aware. For example, if we refer to an "Apple phone", the word "Apple" will be updated to be more "company-like" and less "fruit-like".
-
-![figure 2](visuals/chap3visuals/encoder.png)
-To gain a clear understanding of how it truly works, let's begin with the most important component: the self-attention layer.
+  
 
 
 At the end of our encoder, we have output embeddings that maintain the same size as the inputs. They become more contextually aware. For exemple, if we refer to an "Apple phone",the word "Apple" will be updated at the end to be more "campany like" and less " fruit like".
@@ -37,7 +33,7 @@ At the end of our encoder, we have output embeddings that maintain the same size
 To gain a clear understanding of how it truly works, let's begin with the first component.
 ### Word Embeddings
 
-In Chapter 2, we learned that every word in our input sentence is tokenized, forming a tokens matrix of size (max_sentence_length, vocab_size). Next, we apply a pre-trained weighted matrix to the tokens matrix, transforming the tokenized text into vectors or token embeddings typically of 768 or 512 dimensions. Each dimension in these embeddings represents a distinct feature of the word, such as its fruitness.  
+In Chapter 2, we learned that every word in our input sentence is tokenized, forming a tokens matrix of size (max_sentence_length, vocab_size). Next, we apply a pre-trained weighted matrix to the tokens matrix, transforming the tokenized text into vectors or token embeddings typically of size 768 or 512. Each dimension in these embeddings represents a distinct feature of the word, such as its fruitness.  
 
 The problem is that these new embedding vectors are completely invariant to the position of the word. Luckily, there is an easy trick to capture position information. Let's take a look.  
 
@@ -56,14 +52,6 @@ To do so, we use a technique called:
 
 #### the scaled dot product: 
 There are four main steps to implement this mechanism :  
-
-**1 )&nbsp;** Project each token into three vectors, called:
-   - ***Query:&nbsp;&nbsp;*** represents the token from which the attention mechanism is getting the information, it's used to compare against all the key vectors.
-   - ***Key:&nbsp;&nbsp;***  tells the attention mechanism which parts of the sequence are important for understanding the query.  
-   - ***Value:&nbsp;&nbsp;*** holds the information (features) associated with each token in the sequence.
-  
-
-**2 )&nbsp;** Compute attention scores. we use the similarity function, which is the dot product of the embedding matrices. Query and Keys that are similar will have a large dot product,
 
 **1 )&nbsp;** Project each token embedding into three vectors, called:
    - ***query :&nbsp;&nbsp;*** represents the token from which the attention mechanism is getting the information, it's used to compare against all the key vectors.
@@ -104,8 +92,15 @@ Let's consider the following sentence: 'I love Apple iPhones.' We will represent
 Let's now calculate the attention matrix and focus only on the word **"apple",** which was initially associated more with fruites than technology.
 
 ![figure 6](visuals/chap3visuals/softmax.png)
-
+ 
 <!--
+||**I**|**Love**|**Apple**|**Phones**|
+|--------------|-------------|-------------|-------------|-------------|
+| **I** | * | * | * | * |
+| **Love** | * | * | * | * |
+| **Apple** | 0 | 0 | 0.5 | 0.5 |
+| **Phones** | * | * | * | * |
+
 $$
 \text{softmax}\left(\frac{1}{\sqrt{d_k}}\times\begin{bmatrix}
 5 & 5 \\
@@ -123,7 +118,8 @@ $$
 
 
 
-we got : 
+we got :   
+
 
 ![figure 7](visuals/chap3visuals/attention.png)
 <!--
@@ -173,7 +169,7 @@ We can see how the embedding of the word 'Apple' becomes more company-like and l
 
 ### Multi-headed attention
 
-In our simple example, we only used the embeddings to compute the attention scores, but that's far from the whole story. In practice, the self-attention layer applies three linear transformations to generate the query, key, and value vectors. Each of the three vectors is divided into n pieces, and each set of the new (q, k, and v) vectors are going to be part of creating a separate attention head. Finally, the outputs of these attention heads are concatenated to produce a vector with more contextual awareness.  
+In our simple example, we only used the embeddings to compute the attention scores, but that's far from the whole story. In practice, the self-attention layer applies three linear transformations to generate the query, key, and value vectors. Each of the three vectors is divided into n pieces, and each set of the new (q, k, and v) vectors are going to be part of creating a separate attention head. Finally, the outputs of these attention heads are concatenated to produce an output vector with more contextual awareness.  
 You may ask, why do we need more than one attention head? Well, the softmax of one head only focuses on one aspect of similarity. So, having several heads helps the model to focus on multiple aspects simultaneously. At the end, we pass these new output vectors to a feed forward layer so that they can communicate the learned informations with each other.
 
 ![figure 10](visuals/chap3visuals/multi_attention.png)  
@@ -203,10 +199,9 @@ To include masking into our attention matrix, just before applying the softmax, 
 softmax( [0.1, 0.3,-inf,-inf] ) =  [0.2, 0.8,  0,   0 ]
          [0.1, 0.6, 0.1,-inf]      [0.2, 0.6, 0.2,  0 ] 
          [0.4, 0.1, 0.2, 0.3]      [0.4, 0.1, 0.2, 0.3]
+```  
 
-#We can now clearly see how each word can only focus on the words generated before it.
-```
-   
+We can now clearly see how each word can only focus on the words generated before it. 
 
 **The Encoder-decoder attention layer**   
 
