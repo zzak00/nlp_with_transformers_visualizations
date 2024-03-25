@@ -6,7 +6,6 @@ Tighten your seatbelt, it's time to explore the wonders of NLP✨.
 
 ## The Transformer Architecture
 The original form of transformer was initially based on the encoder-decoder architecture primarily used for translation tasks, However, this design faced challenges in effectively handling long sequences. This is where the attention mechanism comes into play.  
-
 The transformer consists of two main components :  
   
   ***Encoder:***  
@@ -25,16 +24,16 @@ The transformer's encoder is composed of many layers. In each layer, a sequence 
 1) A multi-head self-attention layer
 2) A fully connected feed-forward layer that is applied to each input embedding  
 
-<<<<<<< HEAD
+
 At the end of our encoder, we have output embeddings that maintain the same size as the inputs. They become more contextually aware. For example, if we refer to an "Apple phone", the word "Apple" will be updated to be more "company-like" and less "fruit-like".
 
 ![figure 2](visuals/chap3visuals/encoder.png)
 To gain a clear understanding of how it truly works, let's begin with the most important component: the self-attention layer.
 
-=======
+
 At the end of our encoder, we have output embeddings that maintain the same size as the inputs. They become more contextually aware. For exemple, if we refer to an "Apple phone",the word "Apple" will be updated at the end to be more "campany like" and less " fruit like".
 
-![figure 2](visuals/chap3visuals/encoder.png)
+![figure 3](visuals/chap3visuals/encoder.png)
 To gain a clear understanding of how it truly works, let's begin with the first component.
 ### Word Embeddings
 
@@ -48,7 +47,7 @@ To create these vectors, we use sine and cosine functions, as illustrated below,
 There are several reasons why this method is useful: first, the periodicity of the functions helps in capturing the word's position; additionally, the output of sine and cosine falls between [-1,1], which is normalized. It won’t grow to an unmanageable numbers during calculations; furthermore, no additional training is required, as a unique representation is generated for each position.    
 
 
-![figure 3](visuals/chap3visuals/positional_embeddings.png) 
+![figure 4](visuals/chap3visuals/positional_embeddings.png) 
 
 Now that we've encountered these concepts, we are ready to dive into the most important building bolck .
 ### Self-attention
@@ -88,7 +87,7 @@ $$
   
   
 
-![figure 3](visuals/chap3visuals/self-attention.png)
+![figure 5](visuals/chap3visuals/self-attention.png)
 #### To make it clearer, let's provide a simple example:
 
 Let's consider the following sentence: 'I love Apple iPhones.' We will represent it in a two-dimensional embedding space, where the first dimension represents the fruitiness of the word, and the second represents the technology. 
@@ -104,7 +103,7 @@ Let's consider the following sentence: 'I love Apple iPhones.' We will represent
 
 Let's now calculate the attention matrix and focus only on the word **"apple",** which was initially associated more with fruites than technology.
 
-![figure 2](visuals/chap3visuals/softmax.png)
+![figure 6](visuals/chap3visuals/softmax.png)
 
 <!--
 $$
@@ -126,7 +125,7 @@ $$
 
 we got : 
 
-![figure 2](visuals/chap3visuals/attention.png)
+![figure 7](visuals/chap3visuals/attention.png)
 <!--
 $$
 
@@ -142,7 +141,7 @@ $$
 -->
 We can see that the word **'apple'** is more focused on the word **'phone'** compared to the other words. Finally, let's multiply our weighted matrix by the value matrix.
 
-![figure 2](visuals/chap3visuals/valueMatrix.png)
+![figure 8](visuals/chap3visuals/valueMatrix.png)
 <!--
 $$
 
@@ -169,4 +168,59 @@ $$
 
 We can see how the embedding of the word 'Apple' becomes more company-like and less fruit-like.
 
-![figure 2](visuals/chap3visuals/apple.png)
+![figure 9](visuals/chap3visuals/apple.png)
+
+
+### Multi-headed attention
+
+In our simple example, we only used the embeddings to compute the attention scores, but that's far from the whole story. In practice, the self-attention layer applies three linear transformations to generate the query, key, and value vectors. Each of the three vectors is divided into n pieces, and each set of the new (q, k, and v) vectors are going to be part of creating a separate attention head. Finally, the outputs of these attention heads are concatenated to produce a vector with more contextual awareness.  
+You may ask, why do we need more than one attention head? Well, the softmax of one head only focuses on one aspect of similarity. So, having several heads helps the model to focus on multiple aspects simultaneously. At the end, we pass these new output vectors to a feed forward layer so that they can communicate the learned informations with each other.
+
+![figure 10](visuals/chap3visuals/multi_attention.png)  
+
+Now that we've finished with the encoder, let's turn our focus to the decoder.
+## Decoder
+
+In fact, the decoder continuously uses its previous output as input at each time step to generate the next word until the stop token "< eos >" is reached. As illustrated in the picture below, the main difference between the decoder and encoder is
+that the decoder has two attention sublayers:      
+
+  
+
+**The masked multi-head self-attention layer**  
+
+Ensure that the tokens generated at each timestep are only   based on the previous outputs. This method prevents the decoder from looking at future tokens. without this technique , the decoder can cheat durring the training process by simply copying the target output.  
+To include masking into our attention matrix, just before applying the softmax, we simply add a square matrix with "-$\infty$" above the diagonal and zeros everywhere else. We choose "-$\infty$" because after applying the softmax, any value raised to "-$\infty$" becomes 0 ( $ e^{-\infty} = 0$ ).
+
+```python
+ [0.7,0.1,0.1,0.1]       [0,-inf,-inf,-inf]     [0.7,-inf,-inf,-inf]
+ [0.1,0.3,0.6,0.1]   +   [0,  0,-inf, -inf]  =  [0.1, 0.3,-inf,-inf]
+ [0.1,0.6,0.1,0.2]       [0,  0,  0,  -inf]     [0.1, 0.6, 0.1,-inf]
+ [0.4,0.1,0.2,0.3]       [0,  0,  0,   0  ]     [0.4, 0.1, 0.2, 0.3]
+
+#Let's apply the softmax. 
+
+         [0.7,-inf,-inf,-inf]      [ 1 ,   0,  0,   0 ]
+softmax( [0.1, 0.3,-inf,-inf] ) =  [0.2, 0.8,  0,   0 ]
+         [0.1, 0.6, 0.1,-inf]      [0.2, 0.6, 0.2,  0 ] 
+         [0.4, 0.1, 0.2, 0.3]      [0.4, 0.1, 0.2, 0.3]
+
+#We can now clearly see how each word can only focus on the words generated before it.
+```
+   
+
+**The Encoder-decoder attention layer**   
+
+   Performs the multi-head attention over the output Key and Value matrices of the encoder, with the Query matrix of the decoder. This way, the encoder-decoder attention layer learns how to relate tokens from two different sequences, such as two different languages in translation tasks. Then, we pass the output vectors to a feed-forward layer so that they can communicate the learned information with each other, just as we saw before. 
+    
+ After that, we pass our output vectors of size 768 through another feed-forward layer to expand them  to the size of the output language vocabulary. Finally, we apply a softmax function to determine the most probable word.
+    
+  ![figure 11](visuals/chap3visuals/decoder.png)  
+
+
+## Conclusion
+  
+🎉 Congratulations! 
+ Now, you have a deeper understanding of how transformers work💡. With their ability to attend to all positions in the input sequence simultaneously, transformers offer an alternative to recurrent neural networks, which often struggle with short term memory limitations. This makes transformers particularly advantageous when dealing with long sequences.    
+   
+### Additional code recources : 
+To get started and build your first transformer from scratch, I highly encourage you to take a look at [this post](https://www.linkedin.com/posts/abderrazzak-bajjou_transformers-code-activity-7084824150082473984-zTmz/?utm_source=share&utm_medium=member_desktop). Happy coding🚀.
