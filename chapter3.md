@@ -27,7 +27,7 @@ The transformer's encoder is composed of many layers. In each layer, a sequence 
   
 
 
-At the end of our encoder, we have output embeddings that maintain the same size as the inputs. They become more contextually aware. For exemple, if we refer to an "Apple phone",the word "Apple" will be updated at the end to be more "campany like" and less " fruit like".
+At the end of our encoder, we have output embeddings that maintain the same size as the inputs. They become more contextually aware. For example, if we refer to an "Apple phone", the word "Apple" will be updated at the end to be more "company-like" and less "fruit-like".
 
 ![figure 3](visuals/chap3visuals/encoder.png)
 To gain a clear understanding of how it truly works, let's begin with the first component.
@@ -38,14 +38,14 @@ In Chapter 2, we learned that every word in our input sentence is tokenized, for
 The problem is that these new embedding vectors are completely invariant to the position of the word. Luckily, there is an easy trick to capture position information. Let's take a look.  
 
 ### Positional Embeddings
-Positional embeddinds are based on a simple technique: we add to each token embedding a new vector position of equal size. This approach gives to each word its positional information within the sentence.  
+Positional embeddings are based on a simple technique: we add to each token embedding a new vector position of equal size. This approach gives each word its positional information within the sentence.  
 To create these vectors, we use sine and cosine functions, as illustrated below, where 'pos' represents the position of the word in the sentence, 'i' indicate the index in the vector position, and 'd_model' represents the embedding dimension.  
-There are several reasons why this method is useful: first, the periodicity of the functions helps in capturing the word's position; additionally, the output of sine and cosine falls between [-1,1], which is normalized. It won’t grow to an unmanageable numbers during calculations; furthermore, no additional training is required, as a unique representation is generated for each position.    
+There are several reasons why this method is useful: first, the periodicity of the functions helps in capturing the word's position; additionally, the output of sine and cosine falls between [-1,1], which is normalized. It won’t grow to unmanageable numbers during calculations; furthermore, no additional training is required, as a unique representation is generated for each position.    
 
 
 ![figure 4](visuals/chap3visuals/positional_embeddings.png) 
 
-Now that we've encountered these concepts, we are ready to dive into the most important building bolck .
+Now that we've encountered these concepts, we are ready to dive into the most important building block.
 ### Self-attention
 As we saw earlier, each token is individually represented by a vector of either 768 or 512 dimensions. The main idea behind self-attention is to use the entire sequence to compute a weighted average matrix that describes the relationships between each token embedding and the other token embeddings within the same sentence. As a result, we end up with embeddings that capture context more effectively.  
 To do so, we use a technique called:
@@ -54,14 +54,14 @@ To do so, we use a technique called:
 There are four main steps to implement this mechanism :  
 
 **1 )&nbsp;** Project each token embedding into three vectors, called:
-   - ***query :&nbsp;&nbsp;*** represents the token from which the attention mechanism is getting the information, it's used to compare against all the key vectors.
-   - ***key :&nbsp;&nbsp;***  tells the attention mechanism which parts of the sequence are important for understanding the query.  
-   - ***value :&nbsp;&nbsp;*** holds the informations (features) associated with each token in the sequence.    
+   - ***query:&nbsp;&nbsp;*** represents the token from which the attention mechanism is getting the information, it's used to compare against all the key vectors.
+   - ***key:&nbsp;&nbsp;***  tells the attention mechanism which parts of the sequence are important for understanding the query.  
+   - ***value:&nbsp;&nbsp;*** holds the information (features) associated with each token in the sequence.    
 
-  At the end, we put together all the queue vectors into one matrix, and we do the same for the key and value vectors, resulting in three distinct matrices.
+  In the end, we put together all the queue vectors into one matrix, and we do the same for the key and value vectors, resulting in three distinct matrices.
   
 
-**2 )&nbsp;** Compute attention scores. we use the similarity fonction, which is the dot product of the Query and Key matrix. query and keys that are similar will have a large dot product,
+**2 )&nbsp;** Compute attention scores. we use the similarity function, which is the dot product of the Query and Key matrix. query and keys that are similar will have a large dot product,
 
 
  **3 )&nbsp;** To prevent dealing with large numbers, we normalize the variance of the attention scores by dividing them by the square root of the dimension of the keys  $\sqrt{d_k}$, and then we apply a softmax function to convert the column values into a probability distribution.   
@@ -89,7 +89,7 @@ Let's consider the following sentence: 'I love Apple iPhones.' We will represent
 | **Phones** | 2 | 20|
 
 
-Let's now calculate the attention matrix and focus only on the word **"apple",** which was initially associated more with fruites than technology.
+Let's now calculate the attention matrix and focus only on the word **"apple",** which was initially associated more with fruits than technology.
 
 ![figure 6](visuals/chap3visuals/softmax.png)
  
@@ -170,21 +170,21 @@ We can see how the embedding of the word 'Apple' becomes more company-like and l
 ### Multi-headed attention
 
 In our simple example, we only used the embeddings to compute the attention scores, but that's far from the whole story. In practice, the self-attention layer applies three linear transformations to generate the query, key, and value vectors. Each of the three vectors is divided into n pieces, and each set of the new (q, k, and v) vectors are going to be part of creating a separate attention head. Finally, the outputs of these attention heads are concatenated to produce an output vector with more contextual awareness.  
-You may ask, why do we need more than one attention head? Well, the softmax of one head only focuses on one aspect of similarity. So, having several heads helps the model to focus on multiple aspects simultaneously. At the end, we pass these new output vectors to a feed forward layer so that they can communicate the learned informations with each other.
+You may ask, why do we need more than one attention head? Well, the softmax of one head only focuses on one aspect of similarity. So, having several heads helps the model to focus on multiple aspects simultaneously (== similar to filters in CNN). In the end, we pass these new output vectors to a feed-forward layer so that they can communicate the learned information with each other.
 
 ![figure 10](visuals/chap3visuals/multi_attention.png)  
 
 Now that we've finished with the encoder, let's turn our focus to the decoder.
 ## Decoder
 
-In fact, the decoder continuously uses its previous output as input at each time step to generate the next word until the stop token "< eos >" is reached. As illustrated in the picture below, the main difference between the decoder and encoder is
+The decoder continuously uses its previous output as input at each time step to generate the next word until the stop token "< eos >" is reached. As illustrated in the picture below, the main difference between the decoder and encoder is
 that the decoder has two attention sublayers:      
 
   
 
 **The masked multi-head self-attention layer**  
 
-Ensure that the tokens generated at each timestep are only   based on the previous outputs. This method prevents the decoder from looking at future tokens. without this technique , the decoder can cheat durring the training process by simply copying the target output.  
+It ensures that the tokens generated at each timestep are only based on the previous outputs. This method prevents the decoder from looking at future tokens. without this technique, the decoder can cheat during the training process by simply copying the target output.  
 To include masking into our attention matrix, just before applying the softmax, we simply add a square matrix with "-$\infty$" above the diagonal and zeros everywhere else. We choose "-$\infty$" because after applying the softmax, any value raised to "-$\infty$" becomes 0 ( $ e^{-\infty} = 0$ ).
 
 ```python
