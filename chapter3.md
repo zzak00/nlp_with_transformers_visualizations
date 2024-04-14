@@ -184,7 +184,7 @@ that the decoder has two attention sublayers:
 **The masked multi-head self-attention layer**  
 
 It ensures that the tokens generated at each timestep are only based on the previous outputs. This method prevents the decoder from looking at future tokens. without this technique, the decoder can cheat during the training process by simply copying the target output.  
-To include masking into our attention matrix, just before applying the softmax, we simply add a square matrix with "-$\infty$" above the diagonal and zeros everywhere else. We choose "-$\infty$" because after applying the softmax, any value raised to "-$\infty$" becomes 0 ( $ e^{-\infty} = 0$ ).
+To include masking into our attention matrix, just before applying the softmax, we simply add a square matrix with "-inf" above the diagonal and zeros everywhere else. We choose "-inf" because after applying the softmax, any value raised to "-inf" becomes 0 " e^(-inf) = 0 ".
 
 ```python
  [0.7,0.1,0.1,0.1]       [0,-inf,-inf,-inf]     [0.7,-inf,-inf,-inf]
