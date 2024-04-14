@@ -134,7 +134,7 @@ IPhones & * & * & * & * \\
 \end{array}
 $$
 -->
-We can see that the word **'apple'** is more focused on the word **'phone'** compared to the other words. Finally, let's multiply our weighted matrix by the value matrix.
+We can see that the word **'Apple'** is more focused on the word **'IPhones'** compared to the other words. Finally, let's multiply our weighted matrix by the value matrix.
 
 ![figure 8](visuals/chap3visuals/valueMatrix.png)
 <!--
