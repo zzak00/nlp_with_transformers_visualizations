@@ -27,7 +27,7 @@ The transformer's encoder is composed of many layers. In each layer, a sequence 
   
 
 
-At the end of our encoder, we have output embeddings that maintain the same size as the inputs. They become more contextually aware. For example, if we refer to an "Apple phone", the word "Apple" will be updated at the end to be more "company-like" and less "fruit-like".
+At the end of our encoder, we have output embeddings that maintain the same size as the inputs. They become more contextually aware. For example, if we refer to an "Apple iphone", the word "Apple" will be updated at the end to be more "company-like" and less "fruit-like".
 
 ![figure 3](visuals/chap3visuals/encoder.png)
 To gain a clear understanding of how it truly works, let's begin with the first component.
@@ -86,10 +86,10 @@ Let's consider the following sentence: 'I love Apple iPhones.' We will represent
 | **I** | 5 | 5|
 | **Love** | 7 | 2 |
 | **Apple** | 11 | 9 |
-| **Phones** | 2 | 20|
+| **IPhones** | 2 | 20|
 
 
-Let's now calculate the attention matrix and focus only on the word **"apple",** which was initially associated more with fruits than technology.
+Let's now calculate the attention matrix and focus only on the word **"Apple",** which was initially associated more with fruits than technology.
 
 ![figure 6](visuals/chap3visuals/softmax.png)
  
@@ -110,12 +110,11 @@ $$
 \end{bmatrix}
 \times
 \begin{bmatrix}
-2 & 11 & 7 & 5 \\
-20 & 9 & 2 & 5 \\
+5 & 7 & 11 & 2 \\
+5 & 2 & 9 & 20 \\
 \end{bmatrix} \right)
 $$
 -->
-
 
 
 we got :   
@@ -126,12 +125,12 @@ we got :
 $$
 
 \begin{array}{c|cccc}
-& I & Love & Apple & Phones \\
+& I & Love & Apple & IPhones \\
 \hline
 I & * & * & * & * \\
 Love & * & * & * & * \\
 Apple & 0 & 0 & 0.5 & 0.5 \\
-Phone & * & * & * & * \\
+IPhones & * & * & * & * \\
 \end{array}
 $$
 -->
@@ -204,12 +203,14 @@ softmax( [0.1, 0.3,-inf,-inf] ) =  [0.2, 0.8,  0,   0 ]
 We can now clearly see how each word can only focus on the words generated before it. 
 
 **The Encoder-decoder attention layer**   
+  
+  ![figure 11](visuals/chap3visuals/decoder.png)  
 
    Performs the multi-head attention over the output Key and Value matrices of the encoder, with the Query matrix of the decoder. This way, the encoder-decoder attention layer learns how to relate tokens from two different sequences, such as two different languages in translation tasks. Then, we pass the output vectors to a feed-forward layer so that they can communicate the learned information with each other, just as we saw before. 
     
  After that, we pass our output vectors of size 768 through another feed-forward layer to expand them  to the size of the output language vocabulary. Finally, we apply a softmax function to determine the most probable word.
     
-  ![figure 11](visuals/chap3visuals/decoder.png)  
+    
 
 
 ## Conclusion
