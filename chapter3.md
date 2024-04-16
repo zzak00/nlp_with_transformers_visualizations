@@ -137,6 +137,8 @@ $$
 We can see that the word **'Apple'** is more focused on the word **'IPhones'** compared to the other words. Finally, let's multiply our weighted matrix by the value matrix.
 
 ![figure 8](visuals/chap3visuals/valueMatrix.png)
+<!--
+
 $$
 
 \begin{bmatrix}
@@ -157,6 +159,8 @@ $$
 * & * \\
 \end{bmatrix}
 $$
+-->
+
 **The Updated Apple Embedding :**&emsp; [Apple] = [8.5&emsp;14.5]
 
 We can see how the embedding of the word 'Apple' becomes more company-like and less fruit-like.
