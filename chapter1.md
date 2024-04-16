@@ -15,7 +15,6 @@ Comprising two core components:
 
 The following slides provide an overview of the inner workings of the architecture of a translation task  🎯!
    ![Figure 1](visuals/chap1visuals/encoder_decoder1.jpeg)
-   ![Figure 1](visuals/chap1visuals/encoder_decoder2.jpeg)
 
 
 
