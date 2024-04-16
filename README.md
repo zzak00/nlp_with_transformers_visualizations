@@ -1,4 +1,4 @@
-### NLP with Transformers Visualizations
+# NLP with Transformers Visualizations
 
 Welcome to the "NLP with Transformers Visualizations" GitHub repository! This project explores and elucidates the fascinating world of Natural Language Processing (NLP) using transformer models through rich visualizations and comprehensive descriptions.
 
@@ -10,6 +10,12 @@ Transformers have revolutionized how we handle text data, providing breakthrough
 - **Interactive Examples**: Experience transformers in action with interactive Jupyter notebooks that demonstrate their capabilities in real time.
 - **Comprehensive Descriptions**: Each visualization is accompanied by a thorough explanation, making the concepts accessible to both beginners and advanced practitioners.
 - **Application-Specific Modules**: Explore dedicated modules for different NLP tasks, each tailored to show how transformers can effectively utilize that context.
+
+#### Chapters 
+- [Chapter 1: Introduction to NLP](chapter1.md)
+- [Chapter 2: Text Classification](chapter2.md)
+- [Chapter 3: Dive into Transformers](chapter3.md)
+
 
 #### Tools and Technologies
 This project utilizes popular NLP libraries such as Hugging Face’s Transformers, TensorFlow, and PyTorch, alongside visualization tools like Matplotlib, Seaborn, and Plotly to bring the concepts of transformers to life.
@@ -34,3 +40,4 @@ Jump into the world of NLP with our visually engaging and intellectually stimula
 | Chapter 3 | [Link 1](https://rb.gy/5ctkh)                    |
 |          | [Link 2](https://rb.gy/onjmy)                    |
 | Chapter 4 | [Link 1](https://t.ly/3UfqS)                    |
+
