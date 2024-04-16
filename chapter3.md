@@ -64,14 +64,13 @@ There are four main steps to implement this mechanism :
 **2 )&nbsp;** Compute attention scores. we use the similarity function, which is the dot product of the Query and Key matrix. query and keys that are similar will have a large dot product,
 
 
- **3 )&nbsp;** To prevent dealing with large numbers, we normalize the variance of the attention scores by dividing them by the square root of the dimension of the keys  $\sqrt{d_k}$, and then we apply a softmax function to convert the column values into a probability distribution.   
+ **3 )&nbsp;** To prevent dealing with large numbers, we normalize the variance of the attention scores by dividing them by the square root of the dimension of the keys SQRT(d_k), and then we apply a softmax function to convert the column values into a probability distribution.   
 
 **4 )&nbsp;** Multiply the attention weights by the Value matrix to obtain updated embeddings.
   
     
-$$
-\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
-$$
+![Figure 12](visuals/chap3visuals/qvequation.png)
+
   
   
 
