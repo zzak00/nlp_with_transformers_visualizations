@@ -11,7 +11,7 @@ Transformers have revolutionized how we handle text data, providing breakthrough
 - **Comprehensive Descriptions**: Each visualization is accompanied by a thorough explanation, making the concepts accessible to both beginners and advanced practitioners.
 - **Application-Specific Modules**: Explore dedicated modules for different NLP tasks, each tailored to show how transformers can effectively utilize that context.
 
-#### Chapters 
+#### Chapters :
 - [Chapter 1: Introduction to NLP](chapter1.md)
 - [Chapter 2: Text Classification](chapter2.md)
 - [Chapter 3: Dive into Transformers](chapter3.md)
